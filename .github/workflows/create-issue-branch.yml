@@ -46,7 +46,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git fetch origin
-          git checkout -b "${{ steps.branch.outputs.branch_name }}" origin/main
+          git checkout -b "${{ steps.branch.outputs.branch_name }}" origin/develop
           git push origin "${{ steps.branch.outputs.branch_name }}"
 
       - name: Comment on issue
