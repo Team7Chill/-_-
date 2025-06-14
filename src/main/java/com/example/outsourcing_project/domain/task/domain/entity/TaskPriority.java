@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.task.domain.entity;
+package com.example.outsourcing_project.domain.task.domain.entity;
 
 public enum TaskPriority {
     LOW,    // 낮음
