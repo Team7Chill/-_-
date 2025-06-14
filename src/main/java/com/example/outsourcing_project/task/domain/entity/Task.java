@@ -21,12 +21,12 @@ public class Task {
     // 담당자
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    private User user;
+    private User manager;
 
     // 생성자
     @ManyToOne
     @JoinColumn(name = "creator_id")
-    private User user;
+    private User creator;
 
     // 제목
     @Column(nullable = false)
