@@ -56,7 +56,8 @@ public class JwtFilter implements Filter {
             }
 
             // 블랙리스트 체크
-            if (jwtBlacklistService.isBlacklisted(jwt)) {
+            String jti = jwtUtil.extractJti(jwt);
+            if (jwtBlacklistService.isBlacklisted(jti)) {
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그아웃된 토큰입니다.");
                 return;
             }

@@ -50,11 +50,12 @@ public class AuthController {
     public ResponseEntity<ApiResponse> logout(@RequestHeader("Authorization") String bearerToken) {
 
         String token = jwtUtil.substringToken(bearerToken);
+        String jti = jwtUtil.extractJti(token);  // 토큰에서 jti 추출
 
-        jwtBlacklistService.addBlacklist(token);
+        jwtBlacklistService.addBlacklist(jti);
 
         ApiResponse response = new ApiResponse(true, "로그아웃 성공", Instant.now().toString());
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
 

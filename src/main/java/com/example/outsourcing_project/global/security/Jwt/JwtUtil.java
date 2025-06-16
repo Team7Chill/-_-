@@ -76,7 +76,7 @@ public class JwtUtil {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        throw new IllegalStateException("Not Found Token");
+        throw new IllegalStateException("JWT 토큰이 필요합니다.");
     }
 
     public Claims extractClaims(String token) {
