@@ -3,7 +3,6 @@ package com.example.outsourcing_project.domain.auth.domain.refresh;
 import com.example.outsourcing_project.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -14,19 +13,19 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public RefreshToken createRefreshToken(User user, String token, Instant issuedAt, Instant expiresAt) {
+    public RefreshToken createRefreshToken(User user, String token, Instant issuedAt, Instant expiryDate) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
-                .refreshToken(token)
+                .tokenValue(token)
                 .issuedAt(issuedAt)
-                .expiresAt(expiresAt)
-                .revoked(false)
+                .expiryDate(expiryDate)
+                .isRevoked(false)
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
 
     public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenRepository.findByRefreshToken(token);
+        return refreshTokenRepository.findByTokenValue(token);
     }
 
     public void revokeToken(RefreshToken token) {
