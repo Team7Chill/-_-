@@ -6,8 +6,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Map;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Map<Class<? extends RuntimeException>, HttpStatus> EXCEPTION_STATUS_MAP = Map.of(
+            BadRequestException.class, HttpStatus.BAD_REQUEST,
+            UnauthorizedException.class, HttpStatus.UNAUTHORIZED,
+            ForbiddenException.class, HttpStatus.FORBIDDEN,
+            NotFoundException.class, HttpStatus.NOT_FOUND
+    );
+
     @ExceptionHandler({
             BadRequestException.class,
             UnauthorizedException.class,
@@ -15,19 +24,7 @@ public class GlobalExceptionHandler {
             NotFoundException.class
     })
     public ResponseEntity<CommonErrorResponse> handleCustomExceptions(HttpServletRequest request, RuntimeException ex) {
-        HttpStatus status;
-
-        if (ex instanceof BadRequestException) {
-            status = HttpStatus.BAD_REQUEST;
-        } else if (ex instanceof UnauthorizedException) {
-            status = HttpStatus.UNAUTHORIZED;
-        } else if (ex instanceof ForbiddenException) {
-            status = HttpStatus.FORBIDDEN;
-        } else if (ex instanceof NotFoundException) {
-            status = HttpStatus.NOT_FOUND;
-        } else {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        HttpStatus status = EXCEPTION_STATUS_MAP.getOrDefault(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
 
         CommonErrorResponse response = new CommonErrorResponse(
                 status.value(),
