@@ -1,5 +1,6 @@
 package com.example.outsourcing_project.global.filter;
 
+import com.example.outsourcing_project.global.security.Jwt.JwtBlacklistService;
 import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -17,6 +18,7 @@ import java.io.IOException;
 public class JwtFilter implements Filter {
 
     private final JwtUtil jwtUtil;
+    private final JwtBlacklistService jwtBlacklistService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -50,6 +52,12 @@ public class JwtFilter implements Filter {
             Claims claims = jwtUtil.extractClaims(jwt);
             if (claims == null) {
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 JWT 토큰입니다.");
+                return;
+            }
+
+            // 블랙리스트 체크
+            if (jwtBlacklistService.isBlacklisted(jwt)) {
+                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그아웃된 토큰입니다.");
                 return;
             }
 
