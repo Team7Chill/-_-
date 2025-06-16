@@ -1,12 +1,15 @@
 package com.example.outsourcing_project.domain.log.domain.model;
 
+import com.example.outsourcing_project.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Entity
 public class Log {
     @Id
