@@ -1,6 +1,6 @@
 package com.example.outsourcing_project.domain.log.service;
 
-import com.example.outsourcing_project.domain.log.domain.model.ActivityType;
+import com.example.outsourcing_project.domain.log.domain.model.LoggingType;
 import com.example.outsourcing_project.domain.log.global.LogAspect;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class LogServiceTest {
         when(request.getMethod()).thenReturn("PATCH");
 
         // when
-        logAspect.logActivityInfo(null);
+        logAspect.saveActivityLog(null);
 
         // then
         ArgumentCaptor<LogSaveDto> captor = ArgumentCaptor.forClass(LogSaveDto.class);
@@ -53,7 +53,7 @@ public class LogServiceTest {
         assertEquals("/api/tasks/1", captured.getUri());
         assertEquals("PATCH", captured.getMethod());
         assertEquals(1L, captured.getActivityId());
-        assertEquals(ActivityType.TASK_UPDATED.getType(), captured.getActivityType());
-        assertEquals(ActivityType.TASK_UPDATED.getContents(), captured.getContents());
+        assertEquals(LoggingType.TASK_UPDATED.getType(), captured.getActivityType());
+        assertEquals(LoggingType.TASK_UPDATED.getContents(), captured.getContents());
     }
 }
