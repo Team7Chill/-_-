@@ -1,32 +1,41 @@
 package com.example.outsourcing_project.domain.task.controller.dto;
 
 import com.example.outsourcing_project.domain.task.domain.entity.TaskPriority;
+import com.example.outsourcing_project.domain.task.domain.entity.TaskStatus;
+import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-public class TaskResponseDto {
+public class CreateTaskRequestDto {
 
-    private final Long taskId;
+
     private final Long managerId;
-    private final Long creatorId;
+
     private final String title;
+
     private final String content;
+
     private final TaskPriority priority;
+
+
+    private final TaskStatus status;
+
+
     private final LocalDateTime startDate;
+
+
     private final LocalDateTime deadLine;
 
-    public TaskResponseDto(Long task_id, Long manager_id, Long creator_id, String title, String content, TaskPriority priority, LocalDateTime startDate, LocalDateTime deadLine) {
-        this.taskId = task_id;
-        this.managerId = manager_id;
-        this. creatorId = creator_id;
+    public CreateTaskRequestDto(Long managerId, String title, String content, TaskPriority priority, TaskStatus status, LocalDateTime startDate, LocalDateTime deadLine) {
+        this.managerId = managerId;
         this.title = title;
         this.content = content;
         this.priority = priority;
+        this.status = status;
         this.startDate = startDate;
         this.deadLine = deadLine;
     }
-
-    // 추후 생성일 수정일 추가
 }
