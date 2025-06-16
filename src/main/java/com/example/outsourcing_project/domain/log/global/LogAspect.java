@@ -25,10 +25,10 @@ public class LogAspect {
     private final UserRepository userRepository;
 
     @Pointcut("execution(* com.example.outsourcing_project.domain..service..*(..))")
-    public void testCodeMethod() {}
+    public void loggableServiceMethods() {}
 
-    @AfterReturning(value = "testCodeMethod()", returning = "result")
-    public void logActivityInfo(Object result) {
+    @AfterReturning(value = "loggableServiceMethods()", returning = "result")
+    public void saveActivityLog(Object result) {
         // HttpServletRequest 가져오기
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 
