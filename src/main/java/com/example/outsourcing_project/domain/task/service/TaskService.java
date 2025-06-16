@@ -87,20 +87,21 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
 
+        Long managerId = requestDto.getManagerId();
 
-//        // userRepository를 통해 영속 상태인 User 조회
-//        User manager = userRepository.findById(requestDto.getManagerId())
-//                .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
+        // userRepository를 통해 영속 상태인 User 조회
+        User manager = userRepository.findById(managerId)
+                .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
 
-        // 임시 Manager 객체 생성
-        User manager = new User(
-                2L,
-                "managerUser",
-                "manager@example.com",
-                "encoded-password",
-                "임시 담당자",
-                UserRole.USER
-        );
+//        // 임시 Manager 객체 생성
+//        User manager = new User(
+//                2L,
+//                "managerUser",
+//                "manager@example.com",
+//                "encoded-password",
+//                "임시 담당자",
+//                UserRole.USER
+//        );
 
         task.setManager(manager);
 

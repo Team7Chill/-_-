@@ -1,6 +1,8 @@
 package com.example.outsourcing_project.domain.task.controller.dto;
 
+import com.example.outsourcing_project.domain.task.domain.entity.Task;
 import com.example.outsourcing_project.domain.task.domain.entity.TaskPriority;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -8,19 +10,23 @@ import java.time.LocalDateTime;
 @Getter
 public class UpdateTaskRequestDto {
 
-    private final Long managerId;
-    private final String title;
-    private final String content;
-    private final TaskPriority priority;
-    private final LocalDateTime startDate;
-    private final LocalDateTime deadLine;
+    @JsonProperty("manager_id")
+    private Long managerId;
 
-    public UpdateTaskRequestDto(Long managerId, String title, String content, TaskPriority priority, LocalDateTime startDate, LocalDateTime deadLine) {
-        this.managerId = managerId;
-        this.title = title;
-        this.content = content;
-        this.priority = priority;
-        this.startDate = startDate;
-        this.deadLine = deadLine;
+    private String title;
+    private String content;
+    private TaskPriority priority;
+    private LocalDateTime startDate;
+    private LocalDateTime deadLine;
+
+    public UpdateTaskRequestDto() {};
+
+    public UpdateTaskRequestDto(Task task) {
+        this.managerId = task.getManager().getId();
+        this.title = task.getTitle();
+        this.content = task.getContent();
+        this.priority = task.getPriority();
+        this.startDate = task.getStartDate();
+        this.deadLine = task.getDeadLine();
     }
 }
