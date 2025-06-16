@@ -27,4 +27,12 @@ public class Comments {
     @Column(nullable = false)
     private String content;
 
+    public Comments(String content, Task task) {
+        this.content = content;
+        this.taskId = task;
+    }
+
+    public void update(String content) {
+        this.content = content;
+    }
 }
