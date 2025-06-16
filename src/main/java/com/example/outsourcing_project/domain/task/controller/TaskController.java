@@ -57,4 +57,22 @@ public class TaskController {
 
     }
 
+    @GetMapping("/{taskId}")
+    public ResponseEntity<CustomResponseDto<TaskResponseDto>> getTaskById(@PathVariable Long taskId) {
+        TaskResponseDto taskResponseDto = taskService.getTaskById(taskId);
+
+        CustomResponseDto<TaskResponseDto> responseDto = new CustomResponseDto<>(
+                true,
+                "태스크 조회에 성공하였습니다.",
+                taskResponseDto,
+                ZonedDateTime.now()
+        );
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    // 1. 과제 SpringSecurity 관련 문제 부분 관련 정리해서 내일 스크럼시간에 발표하기
+    // 2. 페이지네이션
+    // 3. 기존 git 토큰과 ssh관련 부분 가이드북 작성과제는 목요일까지
+
 }

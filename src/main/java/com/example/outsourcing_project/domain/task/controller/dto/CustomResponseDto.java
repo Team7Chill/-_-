@@ -14,5 +14,4 @@ public class CustomResponseDto<T> {
     private final T data;
     private final ZonedDateTime timestamp;
 
-
 }

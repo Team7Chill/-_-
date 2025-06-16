@@ -73,4 +73,11 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public TaskResponseDto getTaskById(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 테스크가 존재하지 않습니다."));
+        return new TaskResponseDto(task);
+    }
+
 }
