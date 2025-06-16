@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.domain.auth.domain;
+package com.example.outsourcing_project.domain.auth.domain.jwtblacklist;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

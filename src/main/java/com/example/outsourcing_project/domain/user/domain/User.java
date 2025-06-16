@@ -1,9 +1,13 @@
 package com.example.outsourcing_project.domain.user.domain;
 
+import com.example.outsourcing_project.domain.auth.domain.refresh.RefreshToken;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,4 +34,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @Column(nullable = false)
+    private Integer tokenVersion = 1;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RefreshToken> refreshTokens = new ArrayList<>();
 }
