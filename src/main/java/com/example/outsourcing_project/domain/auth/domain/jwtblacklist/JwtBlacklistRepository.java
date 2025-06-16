@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JwtBlacklistRepository extends JpaRepository<JwtBlacklistToken, String> {
-    boolean existsByToken(String token);
+    boolean existsByJti(String jti);
 }

@@ -6,6 +6,8 @@ import com.example.outsourcing_project.domain.auth.service.AuthService;
 import com.example.outsourcing_project.domain.auth.service.dto.LoginResponse;
 import com.example.outsourcing_project.global.security.Jwt.JwtBlacklistService;
 import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -25,17 +27,24 @@ public class AuthController {
     private final JwtBlacklistService jwtBlacklistService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> loginApi(@Valid @RequestBody LoginRequest request) {
-
-        LoginResponse login = authService.Login(request);
+    public ResponseEntity<ApiResponse> loginApi(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+        LoginResponse login = authService.login(request);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + login.getBearerToken());
+        headers.add("Authorization", login.getAccessToken());
 
-        ApiResponse response = new ApiResponse(true, "로그인 성공", Instant.now().toString());
+        // RefreshToken을 HttpOnly 쿠키로 설정
+        Cookie refreshTokenCookie = new Cookie("refreshToken", jwtUtil.substringToken(login.getRefreshToken()));
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(false);  // HTTPS 환경일 경우 true
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge((int)(jwtUtil.getRefreshTokenExpireTime() / 1000));
+        response.addCookie(refreshTokenCookie);
 
-        return new ResponseEntity<>(response, headers, HttpStatus.OK);
+        ApiResponse apiResponse = new ApiResponse(true, "로그인 성공", Instant.now().toString());
+        return new ResponseEntity<>(apiResponse, headers, HttpStatus.OK);
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse> logout(@RequestHeader("Authorization") String bearerToken) {

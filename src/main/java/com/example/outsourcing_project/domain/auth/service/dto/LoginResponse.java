@@ -4,11 +4,13 @@ import lombok.Getter;
 
 @Getter
 public class LoginResponse {
+    private final String accessToken;
+    private final String refreshToken;
 
-    private final String bearerToken;
-
-    public LoginResponse(String bearerToken) {
-        this.bearerToken = bearerToken;
+    public LoginResponse(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }
+
 

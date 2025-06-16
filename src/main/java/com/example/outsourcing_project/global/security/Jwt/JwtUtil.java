@@ -12,13 +12,15 @@ import org.springframework.util.StringUtils;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 
 @Component
 public class JwtUtil {
 
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private static final long TOKEN_TIME = 30 * 60 * 1000L; // 60분
+    private static final long REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60 * 1000L; // 7일
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -32,22 +34,39 @@ public class JwtUtil {
     }
 
     /**
-     * 토큰 생성
+     * Access 토큰 생성
      */
-    public String createToken(Long userId,String userName, String email, UserRole userRole) {
-        Date date = new Date();
+    public String createAccessToken(Long userId, String userName, String email, UserRole userRole) {
+        Date now = new Date();
+        String jti = UUID.randomUUID().toString();
 
-        return BEARER_PREFIX +
-                Jwts.builder()
+        return BEARER_PREFIX + Jwts.builder()
                 .setSubject(String.valueOf(userId))
-                .claim("userName",userName)
+                .claim("userName", userName)
                 .claim("email", email)
                 .claim("userRole", userRole)
-                .setExpiration(new Date(date.getTime() + TOKEN_TIME))
-                .setIssuedAt(date)
+                .setId(jti)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + TOKEN_TIME))
                 .signWith(key, signatureAlgorithm)
                 .compact();
     }
+
+    /**
+     * Refresh 토큰 생성
+     */
+
+    public String createRefreshToken() {
+        Date now = new Date();
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setId(java.util.UUID.randomUUID().toString())  // 고유 ID
+                        .setIssuedAt(now)
+                        .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_TIME))
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
+    }
+
 
     /**
      * 헤더에서 "Bearer <토큰>" 형식에서 토큰만 추출
@@ -66,6 +85,32 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    // JWT JTI(id) 값 추출
+    public String extractJti(String token) {
+        return extractClaims(token).getId();
+    }
+
+    /**
+     * 토큰 자체의 유효성 검증 메서드
+     */
+
+    public boolean validateToken(String token) {
+        try {
+            Claims claims = extractClaims(token);
+            return !claims.getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public long getAccessTokenExpireTime() {
+        return TOKEN_TIME;
+    }
+
+    public long getRefreshTokenExpireTime() {
+        return REFRESH_TOKEN_TIME;
     }
 }
 

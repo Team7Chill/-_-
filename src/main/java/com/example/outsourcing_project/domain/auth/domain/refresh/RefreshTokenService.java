@@ -38,4 +38,15 @@ public class RefreshTokenService {
         tokens.forEach(token -> token.setRevoked(true));
         refreshTokenRepository.saveAll(tokens);
     }
+
+    /**
+     * DB에 저장된 리프레시 토큰의 유효성 검사
+     */
+
+    public boolean isValidRefreshToken(String token) {
+        Optional<RefreshToken> refreshToken = findByToken(token);
+        return refreshToken.isPresent()
+                && !refreshToken.get().isRevoked()
+                && refreshToken.get().getExpiryDate().isAfter(Instant.now());
+    }
 }
