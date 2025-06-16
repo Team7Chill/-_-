@@ -1,5 +1,6 @@
 package com.example.outsourcing_project.domain.task.controller.dto;
 
+import com.example.outsourcing_project.domain.task.domain.entity.Task;
 import com.example.outsourcing_project.domain.task.domain.entity.TaskPriority;
 import lombok.Getter;
 
@@ -17,15 +18,15 @@ public class TaskResponseDto {
     private final LocalDateTime startDate;
     private final LocalDateTime deadLine;
 
-    public TaskResponseDto(Long task_id, Long manager_id, Long creator_id, String title, String content, TaskPriority priority, LocalDateTime startDate, LocalDateTime deadLine) {
-        this.taskId = task_id;
-        this.managerId = manager_id;
-        this. creatorId = creator_id;
-        this.title = title;
-        this.content = content;
-        this.priority = priority;
-        this.startDate = startDate;
-        this.deadLine = deadLine;
+    public TaskResponseDto(Task task) {
+        this.taskId = task.getId();
+        this.managerId = task.getManager().getId();
+        this. creatorId = task.getCreator().getId();
+        this.title = task.getTitle();
+        this.content = task.getContent();
+        this.priority = task.getPriority();
+        this.startDate = task.getStartDate();
+        this.deadLine = task.getDeadLine();
     }
 
     // 추후 생성일 수정일 추가

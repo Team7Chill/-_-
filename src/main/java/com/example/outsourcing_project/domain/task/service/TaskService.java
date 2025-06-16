@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -59,6 +62,15 @@ public class TaskService {
         Task task = new Task(creator, manager, requestDto.getTitle(), requestDto.getContent(), requestDto.getPriority(), taskStatus, requestDto.getStartDate(), requestDto.getDeadLine());
 
         return new CreateTaskResponseDto(taskRepository.save(task));
+    }
+
+    @Transactional(readOnly = true)
+    public List<TaskResponseDto> getAllTasks() {
+
+        return taskRepository.findAll().stream()
+                .filter(task -> !task.getIsDeleted()) // 삭제되지 않은 태스크만
+                .map(TaskResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 }

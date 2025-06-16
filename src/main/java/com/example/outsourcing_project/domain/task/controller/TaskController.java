@@ -10,12 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -44,5 +42,19 @@ public class TaskController {
         return new ResponseEntity<>(customResponseDto, HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public ResponseEntity<CustomResponseDto<List<TaskResponseDto>>> getAllTasks() {
+        List<TaskResponseDto> taskList = taskService.getAllTasks();
+
+        CustomResponseDto<List<TaskResponseDto>> responseDto = new CustomResponseDto<>(
+                true,
+                "전체 태스크 조회에 성공했습니다.",
+                taskList,
+                ZonedDateTime.now()
+        );
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+    }
 
 }
