@@ -2,10 +2,7 @@ package com.example.outsourcing_project.domain.auth.domain.refresh;
 
 import com.example.outsourcing_project.domain.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -25,15 +22,16 @@ public class RefreshToken {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "refresh_token", length = 512, nullable = false, unique = true)
-    private String refreshToken;
+    @Column(name = "token_value", length = 512, nullable = false, unique = true)
+    private String tokenValue;
 
     @Column(name = "issued_at", nullable = false)
     private Instant issuedAt;
 
-    @Column(name = "expires_at", nullable = false)
-    private Instant expiresAt;
+    @Column(name = "expiry_date", nullable = false)
+    private Instant expiryDate;
 
-    @Column(nullable = false)
-    private boolean revoked = false;
+    @Column(name = "is_revoked", nullable = false)
+    private boolean isRevoked = false;
+
 }

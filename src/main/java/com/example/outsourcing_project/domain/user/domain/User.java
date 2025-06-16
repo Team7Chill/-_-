@@ -35,7 +35,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @Column(nullable = false)
+    @Column(name = "token_version", nullable = false)
     private Integer tokenVersion = 1;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
