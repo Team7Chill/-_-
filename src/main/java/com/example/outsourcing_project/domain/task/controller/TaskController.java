@@ -1,9 +1,6 @@
 package com.example.outsourcing_project.domain.task.controller;
 
-import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskRequestDto;
-import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskResponseDto;
-import com.example.outsourcing_project.domain.task.controller.dto.CustomResponseDto;
-import com.example.outsourcing_project.domain.task.controller.dto.TaskResponseDto;
+import com.example.outsourcing_project.domain.task.controller.dto.*;
 import com.example.outsourcing_project.domain.task.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +62,24 @@ public class TaskController {
                 true,
                 "태스크 조회에 성공하였습니다.",
                 taskResponseDto,
+                ZonedDateTime.now()
+        );
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{taskId}")
+    public ResponseEntity<CustomResponseDto<TaskResponseDto>> updateTask(
+            @PathVariable Long taskId,
+            @RequestBody UpdateTaskRequestDto updateTaskRequestDto
+            ) {
+
+        TaskResponseDto updatedTask = taskService.updateTask(updateTaskRequestDto, taskId);
+
+        CustomResponseDto<TaskResponseDto> responseDto = new CustomResponseDto<>(
+                true,
+                "태스크 수정에 성공하였습니다.",
+                updatedTask,
                 ZonedDateTime.now()
         );
 

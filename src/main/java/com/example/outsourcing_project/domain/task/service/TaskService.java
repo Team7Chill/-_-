@@ -3,6 +3,7 @@ package com.example.outsourcing_project.domain.task.service;
 import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskRequestDto;
 import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskResponseDto;
 import com.example.outsourcing_project.domain.task.controller.dto.TaskResponseDto;
+import com.example.outsourcing_project.domain.task.controller.dto.UpdateTaskRequestDto;
 import com.example.outsourcing_project.domain.task.domain.entity.Task;
 import com.example.outsourcing_project.domain.task.domain.entity.TaskPriority;
 import com.example.outsourcing_project.domain.task.domain.entity.TaskStatus;
@@ -78,6 +79,40 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 테스크가 존재하지 않습니다."));
         return new TaskResponseDto(task);
+    }
+
+    @Transactional
+    public TaskResponseDto updateTask(UpdateTaskRequestDto requestDto, Long taskId) {
+        // 기존 태스크 조회
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
+
+
+//        // userRepository를 통해 영속 상태인 User 조회
+//        User manager = userRepository.findById(requestDto.getManagerId())
+//                .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
+
+        // 임시 Manager 객체 생성
+        User manager = new User(
+                2L,
+                "managerUser",
+                "manager@example.com",
+                "encoded-password",
+                "임시 담당자",
+                UserRole.USER
+        );
+
+        task.setManager(manager);
+
+        // 필드 업데이트
+        task.setManager(manager);
+        task.setTitle(requestDto.getTitle());
+        task.setContent(requestDto.getContent());
+        task.setPriority(requestDto.getPriority());
+        task.setStartDate(requestDto.getStartDate());
+        task.setDeadLine(requestDto.getDeadLine());
+
+        return new TaskResponseDto(taskRepository.save(task));
     }
 
 }
