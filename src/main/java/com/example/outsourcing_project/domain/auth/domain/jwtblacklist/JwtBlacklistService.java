@@ -1,7 +1,6 @@
-package com.example.outsourcing_project.global.security.Jwt;
+package com.example.outsourcing_project.domain.auth.domain.jwtblacklist;
 
-import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistRepository;
-import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistToken;
+import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
@@ -20,9 +19,7 @@ public class JwtBlacklistService {
         jwtBlacklistRepository.save(blacklistToken);
     }
 
-    // 블랙리스트 여부 확인
-    public boolean isBlacklisted(String token) {
-        String jti = jwtUtil.extractJti(token);
+    public boolean isBlacklistedByJti(String jti) {
         return jwtBlacklistRepository.existsByJti(jti);
     }
 }

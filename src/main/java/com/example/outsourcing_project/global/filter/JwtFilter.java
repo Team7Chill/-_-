@@ -1,90 +1,80 @@
 package com.example.outsourcing_project.global.filter;
 
-import com.example.outsourcing_project.global.security.Jwt.JwtBlacklistService;
+import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistService;
+import com.example.outsourcing_project.domain.user.domain.User;
+import com.example.outsourcing_project.domain.user.domain.UserRepository;
+import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
 import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
 @RequiredArgsConstructor
-public class JwtFilter implements Filter {
+public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
     private final JwtBlacklistService jwtBlacklistService;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
-    }
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        String url = request.getRequestURI();
 
-        String url = httpRequest.getRequestURI();
-
-        // 로그인/회원가입 요청은 필터 통과
-        if (url.startsWith("/login")|| (url.startsWith("/signup"))) {
-            chain.doFilter(request, response);
+        if (url.startsWith("/api/login") || url.startsWith("/api/signup")) {
+            filterChain.doFilter(request, response);
             return;
         }
 
-        String bearerJwt = httpRequest.getHeader("Authorization");
+        String bearerJwt = request.getHeader("Authorization");
 
-        if (bearerJwt == null) {
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 토큰이 필요합니다.");
+        if (bearerJwt == null || !bearerJwt.startsWith("Bearer ")) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 토큰이 필요합니다.");
             return;
         }
 
         String jwt = jwtUtil.substringToken(bearerJwt);
 
-        try {
-            Claims claims = jwtUtil.extractClaims(jwt);
-            if (claims == null) {
-                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 JWT 토큰입니다.");
-                return;
-            }
-
-            // 블랙리스트 체크
-            String jti = jwtUtil.extractJti(jwt);
-            if (jwtBlacklistService.isBlacklisted(jti)) {
-                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그아웃된 토큰입니다.");
-                return;
-            }
-
-            //UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
-
-            httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
-            httpRequest.setAttribute("userName", claims.get("userName"));
-            httpRequest.setAttribute("email", claims.get("email"));
-            httpRequest.setAttribute("userRole", claims.get("userRole"));
-
-            chain.doFilter(request, response);
-
-        } catch (SecurityException | MalformedJwtException e) {
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "지원되지 않는 JWT 토큰입니다.");
-        } catch (Exception e) {
-            httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "유효하지 않은 JWT 토큰입니다.");
+        if (!jwtUtil.validateToken(jwt)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+            return;
         }
 
-    }
+        String jti = jwtUtil.extractJti(jwt);
+        if (jwtBlacklistService.isBlacklistedByJti(jti)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그아웃된 토큰입니다.");
+            return;
+        }
 
-    @Override
-    public void destroy() {
-        Filter.super.destroy();
+        String subject = jwtUtil.extractuserId(jwt);
+        Long userId = Long.parseLong(subject);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(
+                            customUserDetails, null, customUserDetails.getAuthorities()
+                    )
+            );
+        }
+
+        filterChain.doFilter(request, response);
     }
 }

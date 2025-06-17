@@ -1,6 +1,6 @@
 package com.example.outsourcing_project.global.security.Jwt;
 
-import com.example.outsourcing_project.domain.user.domain.UserRole;
+import com.example.outsourcing_project.global.enums.UserRoleEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,15 +36,13 @@ public class JwtUtil {
     /**
      * Access 토큰 생성
      */
-    public String createAccessToken(Long userId, String userName, String email, UserRole userRole) {
+    public String createAccessToken(Long userId, String userName, String email, UserRoleEnum userRole) {
         Date now = new Date();
         String jti = UUID.randomUUID().toString();
 
         return BEARER_PREFIX + Jwts.builder()
                 .setSubject(String.valueOf(userId))
-                .claim("userName", userName)
-                .claim("email", email)
-                .claim("userRole", userRole)
+                .claim("role", userRole.name())
                 .setId(jti)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + TOKEN_TIME))
@@ -79,7 +77,13 @@ public class JwtUtil {
         throw new IllegalStateException("JWT 토큰이 필요합니다.");
     }
 
-    public Claims extractClaims(String token) {
+    /**
+     * JWT 토큰에서 모든 클레임을 추출합니다.
+     * @param token JWT 토큰
+     * @return 클레임 객체
+     */
+
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -89,7 +93,7 @@ public class JwtUtil {
 
     // JWT JTI(id) 값 추출
     public String extractJti(String token) {
-        return extractClaims(token).getId();
+        return extractAllClaims(token).getId();
     }
 
     /**
@@ -98,7 +102,7 @@ public class JwtUtil {
 
     public boolean validateToken(String token) {
         try {
-            Claims claims = extractClaims(token);
+            Claims claims = extractAllClaims(token);
             return !claims.getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
@@ -112,5 +116,21 @@ public class JwtUtil {
     public long getRefreshTokenExpireTime() {
         return REFRESH_TOKEN_TIME;
     }
-}
+
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    public String extractRoles(String token) {
+        return extractAllClaims(token).get("auth", String.class);
+    }
+
+    public String extractEmail(String token) {
+        return extractAllClaims(token).get("email",String.class);
+    }
+
+    public String extractuserId(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+ }
 
