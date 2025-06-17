@@ -19,18 +19,18 @@ public class Comments extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User userId;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)
-    private Task taskId;
+    private Task task;
 
     @Column(nullable = false)
     private String content;
 
     public Comments(String content, Task task) {
         this.content = content;
-        this.taskId = task;
+        this.task = task;
     }
 
     public void update(String content) {
