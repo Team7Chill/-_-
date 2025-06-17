@@ -1,7 +1,7 @@
 package com.example.outsourcing_project.domain.task.controller.dto;
 
-import com.example.outsourcing_project.domain.task.domain.entity.Task;
-import com.example.outsourcing_project.domain.task.domain.entity.TaskPriority;
+import com.example.outsourcing_project.domain.task.domain.model.Task;
+import com.example.outsourcing_project.domain.task.domain.model.TaskPriority;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 

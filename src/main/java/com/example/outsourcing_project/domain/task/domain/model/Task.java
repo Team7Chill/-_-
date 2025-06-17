@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.domain.task.domain.entity;
+package com.example.outsourcing_project.domain.task.domain.model;
 
 import com.example.outsourcing_project.domain.user.domain.User;
 import jakarta.persistence.*;

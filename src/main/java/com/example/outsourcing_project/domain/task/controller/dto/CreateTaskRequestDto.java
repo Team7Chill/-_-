@@ -1,10 +1,8 @@
 package com.example.outsourcing_project.domain.task.controller.dto;
 
-import com.example.outsourcing_project.domain.task.domain.entity.TaskPriority;
-import com.example.outsourcing_project.domain.task.domain.entity.TaskStatus;
-import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
+import com.example.outsourcing_project.domain.task.domain.model.TaskPriority;
+import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

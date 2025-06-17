@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.domain.task.domain.entity;
+package com.example.outsourcing_project.domain.task.domain.model;
 
 // 태스크 우선순위 상수화
 public enum TaskPriority {
