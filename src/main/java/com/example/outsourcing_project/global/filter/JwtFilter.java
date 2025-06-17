@@ -26,6 +26,12 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtBlacklistService jwtBlacklistService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
+        return path.equals("/api/login") || path.equals("/api/signup");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
