@@ -103,4 +103,17 @@ public class TaskController {
         return new ResponseEntity<>(customResponseDto, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
+        taskService.softDeleteTask(taskId);
+        CustomResponseDto customResponseDto = new CustomResponseDto(
+                true,
+                "태스크가 삭제되었습니다.",
+                null,
+                ZonedDateTime.now()
+        );
+
+        return new ResponseEntity<>(customResponseDto, HttpStatus.NO_CONTENT);
+    }
+
 }

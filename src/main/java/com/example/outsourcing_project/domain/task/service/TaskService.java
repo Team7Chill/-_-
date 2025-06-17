@@ -86,6 +86,8 @@ public class TaskService {
 
     @Transactional
     public UpdateTaskStatusResponseDto updateTaskStatus(Long taskId, TaskStatus updateStatus) {
+
+        // 태스크 조회
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
 
@@ -93,6 +95,22 @@ public class TaskService {
         Task updatedTask = taskRepository.save(task);
 
         return new UpdateTaskStatusResponseDto(updatedTask.getId(), updatedTask.getStatus());
+    }
+
+    @Transactional
+    public void softDeleteTask(Long taskId) {
+        // 태스크 조회
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
+
+        if (Boolean.TRUE.equals(task.getIsDeleted())) {
+            throw new IllegalArgumentException("이미 삭제된 태스크입니다.");
+        }
+
+        task.setIsDeleted(true);
+        task.setDeletedAt(LocalDateTime.now());
+
+        taskRepository.save(task);
     }
 
 }
