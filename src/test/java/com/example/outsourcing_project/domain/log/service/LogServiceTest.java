@@ -2,7 +2,7 @@ package com.example.outsourcing_project.domain.log.service;
 
 import com.example.outsourcing_project.domain.log.controller.LogResponseDto;
 import com.example.outsourcing_project.domain.log.domain.model.LoggingType;
-import com.example.outsourcing_project.domain.log.global.LogAspect;
+import com.example.outsourcing_project.global.common.LogAspect;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

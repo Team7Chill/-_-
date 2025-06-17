@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.domain.log.global;
+package com.example.outsourcing_project.global.common;
 
 import com.example.outsourcing_project.domain.log.controller.LogResponseDto;
 import com.example.outsourcing_project.domain.log.domain.model.LoggingType;
@@ -23,7 +23,8 @@ public class LogAspect {
     private final LogService logService;
 
     //서비스 패키지 내의 클래스만 접근
-    @Pointcut("execution(* com.example.outsourcing_project.domain..service..*(..))")
+    @Pointcut("execution(* com.example.outsourcing_project.domain..service..*(..)) " +
+            "&& !within(com.example.outsourcing_project.domain.log.service.LogService)") //logService 는 제외
     public void loggableServiceMethods() {}
 
     @AfterReturning(value = "loggableServiceMethods()", returning = "result")
