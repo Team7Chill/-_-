@@ -4,7 +4,7 @@ import com.example.outsourcing_project.domain.comments.controller.CommentCreateR
 import com.example.outsourcing_project.domain.comments.controller.CommentUpdateResponseDto;
 import com.example.outsourcing_project.domain.comments.model.entity.Comments;
 import com.example.outsourcing_project.domain.comments.model.repository.CommentRepository;
-import com.example.outsourcing_project.domain.task.domain.entity.Task;
+import com.example.outsourcing_project.domain.task.domain.model.Task;
 import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
 import com.example.outsourcing_project.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
