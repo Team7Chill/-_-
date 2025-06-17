@@ -22,6 +22,7 @@ public class LogAspect {
 
     private final LogService logService;
 
+    //서비스 패키지 내의 클래스만 접근
     @Pointcut("execution(* com.example.outsourcing_project.domain..service..*(..))")
     public void loggableServiceMethods() {}
 
@@ -37,12 +38,14 @@ public class LogAspect {
         String uri = request.getRequestURI();
         LogSaveDto logSaveDto = new LogSaveDto();
 
+        //LogSaveDto 에 DB 저장 내용 Set
         setLoggingTypeToDto(logSaveDto, result, method, uri);
 
         // 로그 DB 저장
         logService.addLog(logSaveDto);
     }
 
+    //LogSaveDto 에 DB 저장 내용 Set
     private void setLoggingTypeToDto(LogSaveDto logSaveDto,Object result, String method, String uri){
         logSaveDto.setUri(uri);
         logSaveDto.setMethod(method);
@@ -60,6 +63,7 @@ public class LogAspect {
         }
     }
 
+    //ActivityId는 taks, comment, user 구분하여 Set
     private void setActivityIdByMethod(LogSaveDto logSaveDto, LoggingType loggingType, String method, String uri, Object result){
         if(!"POST".equals(method)){
             logSaveDto.setActivityId(extractIdFromUri(uri, loggingType.getIdIndex()));
@@ -76,6 +80,7 @@ public class LogAspect {
         }
     }
 
+    //uri 에서 id 추출
     private Long extractIdFromUri(String uri, int index) {
         if(index < 0) return null;
 
