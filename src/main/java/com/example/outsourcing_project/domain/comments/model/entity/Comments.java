@@ -1,7 +1,8 @@
-package com.example.outsourcing_project.domain.comments.domain.entity;
+package com.example.outsourcing_project.domain.comments.model.entity;
 
 import com.example.outsourcing_project.domain.task.domain.entity.Task;
 import com.example.outsourcing_project.domain.user.domain.User;
+import com.example.outsourcing_project.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "task_comments")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comments {
+public class Comments extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

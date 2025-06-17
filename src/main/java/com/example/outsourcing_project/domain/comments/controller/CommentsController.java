@@ -1,10 +1,10 @@
 package com.example.outsourcing_project.domain.comments.controller;
 
 
-import com.example.outsourcing_project.domain.comments.service.CommentsService;
+import com.example.outsourcing_project.domain.comments.service.CommentService;
+import com.example.outsourcing_project.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,42 +15,55 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentsController {
 
-    private final CommentsService commentsService;
+    private final CommentService commentService;
 
     @PostMapping("/tasks/{taskId}/comments")
-    public ResponseEntity<CreateCommentsResponse> createComment(
+    public ResponseEntity<ApiResponse<CommentCreateResponseDto>> createComment(
             @PathVariable Long taskId,
-            @RequestBody @Valid CreateCommentsRequest request) { // TODO: JWT 통한 사용자 인증 추가 필요
-        return new ResponseEntity<>(commentsService.createComment(taskId, request.getContent()), HttpStatus.CREATED);
+            @RequestBody @Valid CommentCreateRequestDto request) { // TODO: JWT 통한 사용자 인증 추가 필요
+
+        CommentCreateResponseDto comment = commentService.createComment(taskId, request.getContent());
+        return ResponseEntity.ok(ApiResponse.success(comment,"댓글 작성 성공"));
     }
+
 
     @GetMapping("/tasks/{taskId}/comments")
-    public ResponseEntity<List<CreateCommentsResponse>> getAllComments(@PathVariable Long taskId) {
-        return new ResponseEntity<>(commentsService.getAllComments(taskId), HttpStatus.OK);
+    public ResponseEntity<ApiResponse<List<CommentCreateResponseDto>>> getAllComments(@PathVariable Long taskId) {
+
+        List<CommentCreateResponseDto> allComments = commentService.getAllComments(taskId);
+        String message = String.format("%d 태스크의 댓글 전체 조회", taskId);
+        return ResponseEntity.ok(ApiResponse.success(allComments, message));
     }
+
 
     @GetMapping("/tasks/{taskId}/comments/{commentId}")
-    public ResponseEntity<CreateCommentsResponse> getCommentByTask(
+    public ResponseEntity<ApiResponse<CommentCreateResponseDto>> getCommentByTask(
             @PathVariable Long taskId,
             @PathVariable Long commentId) {
-        return new ResponseEntity<>(commentsService.getCommentByTask(taskId, commentId), HttpStatus.OK);
+        CommentCreateResponseDto commentByTask = commentService.getCommentByTask(taskId, commentId);
+        String message = String.format("%d 태스크의 댓글 단건 조회", taskId);
+        return ResponseEntity.ok(ApiResponse.success(commentByTask, message));
     }
+
 
     @PatchMapping("/tasks/{taskId}/comments/{commentId}")
-    public ResponseEntity<UpdateCommentsResponse> updateComment(
+    public ResponseEntity<ApiResponse<CommentUpdateResponseDto>> updateComment(
             @PathVariable Long taskId,
             @PathVariable Long commentId,
-            @RequestBody UpdateCommentsRequest request) {
-        commentsService.updateComments(taskId, commentId, request.getComments());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            @RequestBody CommentUpdateRequestDto request) {
+        CommentUpdateResponseDto updateCommentsResponse = commentService.updateComments(taskId, commentId, request.getComments());
+        String message = String.format("%d 태스크의 댓글 수정", taskId);
+        return ResponseEntity.ok(ApiResponse.success(updateCommentsResponse, message));
     }
 
+
     @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
-    public ResponseEntity<Void> deleteComments(
+    public ResponseEntity<ApiResponse<Void>> deleteComments(
             @PathVariable Long taskId,
             @PathVariable Long commentId) {
-        commentsService.deleteComments(taskId, commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        commentService.deleteComments(taskId, commentId);
+        String message = String.format("%d 태스크의 댓글 삭제", taskId);
+        return ResponseEntity.ok(ApiResponse.success(null, message));
     }
 
 

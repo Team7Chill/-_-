@@ -1,10 +1,5 @@
 package com.example.outsourcing_project.domain.task.domain.repository;
-
-<<<<<<< Updated upstream
 import com.example.outsourcing_project.domain.dashboard.controller.dto.TodayTasksResponseDto;
-=======
-import com.example.outsourcing_project.domain.comments.domain.entity.Comments;
->>>>>>> Stashed changes
 import com.example.outsourcing_project.domain.task.domain.entity.Task;
 import com.example.outsourcing_project.domain.task.domain.entity.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-<<<<<<< Updated upstream
+
 public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("select COUNT(t) from Task t where t.isDeleted = false and t.creator = :userId")
     long countAll(@Param("userId") Long userId);
@@ -42,9 +37,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "when 'LOW' then 3 " +
             "else 4 end")
     List<TodayTasksResponseDto> findTodayTasks(@Param("userId") Long userId);
-=======
-import java.util.List;
 
-public interface TaskRepository extends JpaRepository<Task, Long> {
->>>>>>> Stashed changes
 }

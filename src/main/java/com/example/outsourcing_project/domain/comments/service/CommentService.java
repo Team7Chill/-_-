@@ -1,9 +1,9 @@
 package com.example.outsourcing_project.domain.comments.service;
 
-import com.example.outsourcing_project.domain.comments.controller.CreateCommentsResponse;
-import com.example.outsourcing_project.domain.comments.controller.UpdateCommentsResponse;
-import com.example.outsourcing_project.domain.comments.domain.entity.Comments;
-import com.example.outsourcing_project.domain.comments.domain.repository.CommentsRepository;
+import com.example.outsourcing_project.domain.comments.controller.CommentCreateResponseDto;
+import com.example.outsourcing_project.domain.comments.controller.CommentUpdateResponseDto;
+import com.example.outsourcing_project.domain.comments.model.entity.Comments;
+import com.example.outsourcing_project.domain.comments.model.repository.CommentRepository;
 import com.example.outsourcing_project.domain.task.domain.entity.Task;
 import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
 import com.example.outsourcing_project.global.exception.NotFoundException;
@@ -14,58 +14,58 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CommentsService {
+public class CommentService {
 
-    private final CommentsRepository commentsRepository;
+    private final CommentRepository commentRepository;
     private final TaskRepository taskRepository;
 
-    public CreateCommentsResponse createComment(Long taskId, String content) {
+    public CommentCreateResponseDto createComment(Long taskId, String content) {
 
         Task task = getTaskOrThrow(taskId);
 
-        Comments savedComments = commentsRepository.save(new Comments(content, task));
+        Comments savedComments = commentRepository.save(new Comments(content, task));
 
-        return new CreateCommentsResponse(savedComments);
+        return new CommentCreateResponseDto(savedComments);
     }
 
 
-    public List<CreateCommentsResponse> getAllComments(Long taskId) {
+    public List<CommentCreateResponseDto> getAllComments(Long taskId) {
         Task task = getTaskOrThrow(taskId);
 
-        List<Comments> commentsList = commentsRepository.findByTask(task);
+        List<Comments> commentsList = commentRepository.findByTask(task);
 
         return commentsList.stream()
-                .map(CreateCommentsResponse::new)
+                .map(CommentCreateResponseDto::new)
                 .toList();
     }
 
-    public CreateCommentsResponse getCommentByTask(Long taskId, Long commentId) {
+    public CommentCreateResponseDto getCommentByTask(Long taskId, Long commentId) {
         Task task = getTaskOrThrow(taskId);
 
-        Comments comment = commentsRepository.findByIdAndTask(commentId, task)
+        Comments comment = commentRepository.findByIdAndTask(commentId, task)
                 .orElseThrow(() -> new NotFoundException("해당 태스크에 댓글이 존재하지 않습니다."));
 
-        return new CreateCommentsResponse(comment);
+        return new CommentCreateResponseDto(comment);
     }
 
-    public UpdateCommentsResponse updateComments(Long taskId, Long commentId, String comments) {
+    public CommentUpdateResponseDto updateComments(Long taskId, Long commentId, String comments) {
         Task task = getTaskOrThrow(taskId);
 
-        Comments comment = commentsRepository.findByIdAndTask(commentId, task)
+        Comments comment = commentRepository.findByIdAndTask(commentId, task)
                 .orElseThrow(() -> new NotFoundException("해당 태스크에 댓글이 존재하지 않습니다."));
 
         comment.update(comments);
-        return new UpdateCommentsResponse(comment);
+        return new CommentUpdateResponseDto(comment);
     }
 
 
     public void deleteComments(Long taskId, Long commentId) {
         Task task = getTaskOrThrow(taskId);
 
-        Comments comment = commentsRepository.findByIdAndTask(commentId, task)
+        Comments comment = commentRepository.findByIdAndTask(commentId, task)
                 .orElseThrow(() -> new NotFoundException("해당 태스크에 댓글이 존재하지 않습니다."));
 
-        commentsRepository.delete(comment);
+        commentRepository.delete(comment);
     }
 
     // 태스크 탐색 & 예외처리 공용 메서드
