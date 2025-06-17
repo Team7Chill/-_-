@@ -4,6 +4,7 @@ import com.example.outsourcing_project.domain.log.controller.LogRequestDto;
 import com.example.outsourcing_project.domain.log.controller.LogResponseDto;
 import com.example.outsourcing_project.domain.log.domain.model.Log;
 import com.example.outsourcing_project.domain.log.domain.repository.LogRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -61,5 +62,19 @@ public class LogService {
         if(startDate.isAfter(endDate)){
             throw new IllegalArgumentException("시작일은 종료일보다 빠르거나 같아야 합니다.");
         }
+    }
+
+    @Transactional
+    public LogResponseDto testCode(LogResponseDto dto){
+        System.out.println(dto.toString());
+        return dto;
+    }
+
+    @Transactional
+    public void addLog(LogSaveDto logSaveDto){
+
+        Log log = logSaveDto.toEntity();
+
+        logRepository.save(log);
     }
 }
