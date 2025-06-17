@@ -31,13 +31,6 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String url = request.getRequestURI();
-
-        if (url.startsWith("/api/login") || url.startsWith("/api/signup")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String bearerJwt = request.getHeader("Authorization");
 
         if (bearerJwt == null || !bearerJwt.startsWith("Bearer ")) {
