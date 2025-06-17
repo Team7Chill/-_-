@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+// 태스크 수정 요청 DTO
 @Getter
 public class UpdateTaskRequestDto {
 

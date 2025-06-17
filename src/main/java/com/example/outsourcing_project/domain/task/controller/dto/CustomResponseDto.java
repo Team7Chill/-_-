@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.ZonedDateTime;
 
+// 팀에서 정한 응답 규칙 DTO
 @Getter
 @RequiredArgsConstructor
 public class CustomResponseDto<T> {

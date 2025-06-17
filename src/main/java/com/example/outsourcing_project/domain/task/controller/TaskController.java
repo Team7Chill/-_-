@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 
-
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
@@ -21,6 +20,7 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    // 태스크 작성(POST)
     @PostMapping
     public ResponseEntity<CustomResponseDto<CreateTaskResponseDto>> createTask(@Valid @RequestBody CreateTaskRequestDto createTaskRequestDto) {
 
@@ -41,6 +41,8 @@ public class TaskController {
         return new ResponseEntity<>(customResponseDto, HttpStatus.CREATED);
     }
 
+    // 태스크 전체 조회(GET)
+    // 페이징 기능 적용
     @GetMapping
     public ResponseEntity<CustomResponseDto<Page<TaskResponseDto>>> getAllTasks(Pageable pageable) {
         Page<TaskResponseDto> taskResponseDtoPage = taskService.getTasks(pageable);
@@ -55,6 +57,7 @@ public class TaskController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    // 태스크 단건 조회(GET)
     @GetMapping("/{taskId}")
     public ResponseEntity<CustomResponseDto<TaskResponseDto>> getTaskById(@PathVariable Long taskId) {
         TaskResponseDto taskResponseDto = taskService.getTaskById(taskId);
@@ -69,6 +72,7 @@ public class TaskController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    // 태스크 수정(PATCH)
     @PatchMapping("/{taskId}")
     public ResponseEntity<CustomResponseDto<TaskResponseDto>> updateTask(
             @PathVariable Long taskId,
@@ -87,6 +91,7 @@ public class TaskController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    // 태스크 상태 수정(PATCH)
     @PatchMapping("/{taskId}/status")
     public ResponseEntity<CustomResponseDto<UpdateTaskStatusResponseDto>> updateTaskStatus(
             @PathVariable Long taskId,
@@ -104,6 +109,7 @@ public class TaskController {
         return new ResponseEntity<>(customResponseDto, HttpStatus.OK);
     }
 
+    // 태스크 삭제(DELETE)
     @DeleteMapping("/{taskId}")
     public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
         taskService.softDeleteTask(taskId);
@@ -116,5 +122,4 @@ public class TaskController {
 
         return new ResponseEntity<>(customResponseDto, HttpStatus.NO_CONTENT);
     }
-
 }

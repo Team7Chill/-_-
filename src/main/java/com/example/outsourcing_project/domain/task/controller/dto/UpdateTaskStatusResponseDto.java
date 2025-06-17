@@ -1,11 +1,11 @@
 package com.example.outsourcing_project.domain.task.controller.dto;
 
 import com.example.outsourcing_project.domain.task.domain.entity.TaskStatus;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 
+// 태스크 수정 응답 DTO
 @Getter
 public class UpdateTaskStatusResponseDto {
 

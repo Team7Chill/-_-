@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+// 태스크 생성 응답 DTO
 @Getter
 public class CreateTaskResponseDto {
     private final Long taskId;
