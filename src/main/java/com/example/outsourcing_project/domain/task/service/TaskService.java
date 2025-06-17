@@ -1,9 +1,6 @@
 package com.example.outsourcing_project.domain.task.service;
 
-import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskRequestDto;
-import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskResponseDto;
-import com.example.outsourcing_project.domain.task.controller.dto.TaskResponseDto;
-import com.example.outsourcing_project.domain.task.controller.dto.UpdateTaskRequestDto;
+import com.example.outsourcing_project.domain.task.controller.dto.*;
 import com.example.outsourcing_project.domain.task.domain.entity.Task;
 import com.example.outsourcing_project.domain.task.domain.entity.TaskPriority;
 import com.example.outsourcing_project.domain.task.domain.entity.TaskStatus;
@@ -15,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,6 +82,17 @@ public class TaskService {
         task.setDeadLine(requestDto.getDeadLine());
 
         return new TaskResponseDto(taskRepository.save(task));
+    }
+
+    @Transactional
+    public UpdateTaskStatusResponseDto updateTaskStatus(Long taskId, TaskStatus updateStatus) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
+
+        task.setStatus(updateStatus);
+        Task updatedTask = taskRepository.save(task);
+
+        return new UpdateTaskStatusResponseDto(updatedTask.getId(), updatedTask.getStatus());
     }
 
 }

@@ -86,8 +86,21 @@ public class TaskController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    // 1. 과제 SpringSecurity 관련 문제 부분 관련 정리해서 내일 스크럼시간에 발표하기
-    // 2. 페이지네이션
-    // 3. 기존 git 토큰과 ssh관련 부분 가이드북 작성과제는 목요일까지
+    @PatchMapping("/{taskId}/status")
+    public ResponseEntity<CustomResponseDto<UpdateTaskStatusResponseDto>> updateTaskStatus(
+            @PathVariable Long taskId,
+            @RequestBody UpdateTaskStatusRequestDto requestDto
+    ) {
+        UpdateTaskStatusResponseDto responseDto = taskService.updateTaskStatus(taskId, requestDto.getStatus());
+
+        CustomResponseDto<UpdateTaskStatusResponseDto> customResponseDto = new CustomResponseDto<>(
+                true,
+                "태스크 상태 수정에 성공했습니다.",
+                responseDto,
+                ZonedDateTime.now()
+        );
+
+        return new ResponseEntity<>(customResponseDto, HttpStatus.OK);
+    }
 
 }
