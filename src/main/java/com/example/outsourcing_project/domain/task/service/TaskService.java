@@ -9,6 +9,8 @@ import com.example.outsourcing_project.domain.user.domain.User;
 import com.example.outsourcing_project.domain.user.domain.UserRepository;
 import com.example.outsourcing_project.domain.user.domain.UserRole;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
+    // 태스크 생성/저장
     @Transactional
     public CreateTaskResponseDto createTask(CreateTaskRequestDto requestDto, Long creatorId) {
 
@@ -43,15 +46,14 @@ public class TaskService {
         return new CreateTaskResponseDto(taskRepository.save(task));
     }
 
+    // 태스크 전체 조회
     @Transactional(readOnly = true)
-    public List<TaskResponseDto> getAllTasks() {
+    public Page<TaskResponseDto> getTasks(Pageable pageable) {
 
-        return taskRepository.findAll().stream()
-                .filter(task -> !task.getIsDeleted()) // 삭제되지 않은 태스크만
-                .map(TaskResponseDto::new)
-                .collect(Collectors.toList());
+        return taskRepository.findAllByIsDeletedFalse(pageable).map(TaskResponseDto::new);
     }
 
+    // 태스크 단건 조회
     @Transactional(readOnly = true)
     public TaskResponseDto getTaskById(Long taskId) {
         Task task = taskRepository.findById(taskId)
@@ -59,6 +61,7 @@ public class TaskService {
         return new TaskResponseDto(task);
     }
 
+    // 태스크 수정
     @Transactional
     public TaskResponseDto updateTask(UpdateTaskRequestDto requestDto, Long taskId) {
         // 기존 태스크 조회
@@ -84,6 +87,7 @@ public class TaskService {
         return new TaskResponseDto(taskRepository.save(task));
     }
 
+    // 태스크 상태 수정
     @Transactional
     public UpdateTaskStatusResponseDto updateTaskStatus(Long taskId, TaskStatus updateStatus) {
 
@@ -97,6 +101,7 @@ public class TaskService {
         return new UpdateTaskStatusResponseDto(updatedTask.getId(), updatedTask.getStatus());
     }
 
+    // 태스크 삭제(soft delete)
     @Transactional
     public void softDeleteTask(Long taskId) {
         // 태스크 조회
