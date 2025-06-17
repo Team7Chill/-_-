@@ -1,15 +1,21 @@
 package com.example.outsourcing_project.domain.user.domain;
 
+import com.example.outsourcing_project.domain.auth.domain.refresh.RefreshToken;
+import com.example.outsourcing_project.global.enums.UserRoleEnum;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -28,6 +34,14 @@ public class User {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
+    @Column(name = "token_version", nullable = false)
+    private Integer tokenVersion = 1;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RefreshToken> refreshTokens = new ArrayList<>();
+
 }
