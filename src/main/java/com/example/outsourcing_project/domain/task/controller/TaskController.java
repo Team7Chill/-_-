@@ -28,6 +28,7 @@ public class TaskController {
 //    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //    Long creatorId = ((AuthUserDto) authentication.getPrincipal()).getId();
 
+        // 임시 생성자
         Long exUserId = 1L;
 
         CreateTaskResponseDto responseDto = taskService.createTask(createTaskRequestDto, exUserId);

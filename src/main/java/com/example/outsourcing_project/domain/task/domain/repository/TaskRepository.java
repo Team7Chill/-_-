@@ -15,14 +15,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // 태스크 검색(제목, 내용, 상태 필터링)
     @Query("SELECT t From Task t " +
-    "WHERE t.isDeleted = false " +
-    "AND (:title IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
-    "AND (:content IS NULL OR LOWER(t.content) LIKE LOWER(CONCAT('%', :content, '%'))) " +
-    "AND (:status IS NULL OR t.status = :status)")
+            "WHERE t.isDeleted = false " +
+            "AND (:title IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+            "AND (:content IS NULL OR LOWER(t.content) LIKE LOWER(CONCAT('%', :content, '%'))) " +
+            "AND (:status IS NULL OR t.status = :status)")
     Page<Task> searchTasks(
             @Param("title") String title,
             @Param("content") String content,
-            @Param("status")TaskStatus status,
+            @Param("status") TaskStatus status,
             Pageable pageable
-            );
+    );
 }
