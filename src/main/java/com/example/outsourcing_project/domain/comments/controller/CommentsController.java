@@ -1,16 +1,68 @@
 package com.example.outsourcing_project.domain.comments.controller;
 
 
-import com.example.outsourcing_project.domain.comments.service.CommnetsService;
+import com.example.outsourcing_project.domain.comments.service.CommentService;
+import com.example.outsourcing_project.global.common.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class CommentsController {
 
-    private final CommnetsService commnetsService;
+    private final CommentService commentService;
 
+    @PostMapping("/tasks/{taskId}/comments")
+    public ResponseEntity<ApiResponse<CommentCreateResponseDto>> createComment(
+            @PathVariable Long taskId,
+            @RequestBody @Valid CommentCreateRequestDto request) { // TODO: JWT 통한 사용자 인증 추가 필요
+
+        CommentCreateResponseDto comment = commentService.createComment(taskId, request.getContent());
+        return ResponseEntity.ok(ApiResponse.success(comment,"댓글 작성 성공"));
+    }
+
+
+    @GetMapping("/tasks/{taskId}/comments")
+    public ResponseEntity<ApiResponse<List<CommentCreateResponseDto>>> getAllComments(@PathVariable Long taskId) {
+        // TODO: 페이지네이션
+        List<CommentCreateResponseDto> allComments = commentService.getAllComments(taskId);
+        String message = String.format("%d 태스크의 댓글 전체 조회", taskId);
+        return ResponseEntity.ok(ApiResponse.success(allComments, message));
+    }
+
+
+    @GetMapping("/tasks/{taskId}/comments/{commentId}")
+    public ResponseEntity<ApiResponse<CommentCreateResponseDto>> getCommentByTask(
+            @PathVariable Long taskId,
+            @PathVariable Long commentId) {
+        CommentCreateResponseDto commentByTask = commentService.getCommentByTask(taskId, commentId);
+        String message = String.format("%d 태스크의 댓글 단건 조회", taskId);
+        return ResponseEntity.ok(ApiResponse.success(commentByTask, message));
+    }
+
+
+    @PatchMapping("/tasks/{taskId}/comments/{commentId}")
+    public ResponseEntity<ApiResponse<CommentUpdateResponseDto>> updateComment(
+            @PathVariable Long taskId,
+            @PathVariable Long commentId,
+            @RequestBody CommentUpdateRequestDto request) {
+        CommentUpdateResponseDto updateCommentsResponse = commentService.updateComments(taskId, commentId, request.getComments());
+        String message = String.format("%d 태스크의 댓글 수정", taskId);
+        return ResponseEntity.ok(ApiResponse.success(updateCommentsResponse, message));
+    }
+
+
+    @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
+    public ResponseEntity<ApiResponse<Void>> deleteComments(
+            @PathVariable Long taskId,
+            @PathVariable Long commentId) {
+        commentService.deleteComments(taskId, commentId);
+        String message = String.format("%d 태스크의 댓글 삭제", taskId);
+        return ResponseEntity.ok(ApiResponse.success(null, message));
+    }
 }

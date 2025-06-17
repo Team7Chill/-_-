@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.domain.task.domain.entity;
+package com.example.outsourcing_project.domain.task.domain.model;
 
 import com.example.outsourcing_project.domain.user.domain.User;
 import jakarta.persistence.*;
@@ -19,15 +19,15 @@ public class Task {
     @Column(name = "task_id")
     private Long id;
 
-    // 담당자
-    @ManyToOne
-    @JoinColumn(name = "manager_id")
-    private User manager;
-
     // 생성자
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
+
+    // 담당자
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private User manager;
 
     // 제목
     @Column(nullable = false)
@@ -67,4 +67,15 @@ public class Task {
     // 생성일, 수정일은 BaseTaskTimeEntity에서...
 
     public Task() {}
+
+    public Task(User creator, User manager, String title, String content, TaskPriority priority, TaskStatus status, LocalDateTime startDate, LocalDateTime deadLine) {
+        this.creator = creator;
+        this.manager = manager;
+        this.title = title;
+        this.content = content;
+        this.priority = priority;
+        this.status = status;
+        this.startDate = startDate;
+        this.deadLine = deadLine;
+    }
 }

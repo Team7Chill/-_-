@@ -2,17 +2,22 @@ package com.example.outsourcing_project.domain.log.controller;
 
 import com.example.outsourcing_project.domain.log.domain.model.Log;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 public class LogResponseDto {
+    @Setter
     private Long id;
     private String username;
     private Long activityId;
     private String activityType;
     private String contents;
     private LocalDateTime createdAt;
+
+    public LogResponseDto() {
+    }
 
     public LogResponseDto toDto(Log log) {
         this.id = log.getId();
