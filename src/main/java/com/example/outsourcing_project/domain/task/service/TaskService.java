@@ -1,22 +1,19 @@
 package com.example.outsourcing_project.domain.task.service;
 
 import com.example.outsourcing_project.domain.task.controller.dto.*;
-import com.example.outsourcing_project.domain.task.domain.entity.Task;
-import com.example.outsourcing_project.domain.task.domain.entity.TaskPriority;
-import com.example.outsourcing_project.domain.task.domain.entity.TaskStatus;
+import com.example.outsourcing_project.domain.task.domain.model.Task;
+import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
 import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
 import com.example.outsourcing_project.domain.user.domain.User;
 import com.example.outsourcing_project.domain.user.domain.UserRepository;
-import com.example.outsourcing_project.domain.user.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +48,14 @@ public class TaskService {
     public Page<TaskResponseDto> getTasks(Pageable pageable) {
 
         return taskRepository.findAllByIsDeletedFalse(pageable).map(TaskResponseDto::new);
+    }
+
+    // 태스크 검색 조건 추가 (제목, 내용, 상태필터링)
+    @Transactional(readOnly = true)
+    public Page<TaskResponseDto> searchTasks(String title, String content, TaskStatus status, Pageable pageable) {
+        Page<Task> tasks = taskRepository.searchTasks(title, content, status, pageable);
+
+        return tasks.map(TaskResponseDto::new);
     }
 
     // 태스크 단건 조회

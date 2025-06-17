@@ -1,6 +1,7 @@
 package com.example.outsourcing_project.domain.task.controller;
 
 import com.example.outsourcing_project.domain.task.controller.dto.*;
+import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
 import com.example.outsourcing_project.domain.task.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,26 @@ public class TaskController {
                 true,
                 "전체 태스크 조회에 성공했습니다.",
                 taskResponseDtoPage,
+                ZonedDateTime.now()
+        );
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    // 태스크 검색 조건 추가(제목 검색, 내용 검색, 상태 필터링)
+    @GetMapping("/search")
+    public ResponseEntity<CustomResponseDto<Page<TaskResponseDto>>> searchTask(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @RequestParam(required = false)TaskStatus status,
+            Pageable pageable
+            ) {
+        Page<TaskResponseDto> result = taskService.searchTasks(title, content, status, pageable);
+
+        CustomResponseDto<Page<TaskResponseDto>> responseDto = new CustomResponseDto<>(
+                true,
+                "태스크 검색에 성공했습니다.",
+                result,
                 ZonedDateTime.now()
         );
 
