@@ -29,7 +29,7 @@ public class CommentsController {
 
     @GetMapping("/tasks/{taskId}/comments")
     public ResponseEntity<ApiResponse<List<CommentCreateResponseDto>>> getAllComments(@PathVariable Long taskId) {
-
+        // TODO: 페이지네이션
         List<CommentCreateResponseDto> allComments = commentService.getAllComments(taskId);
         String message = String.format("%d 태스크의 댓글 전체 조회", taskId);
         return ResponseEntity.ok(ApiResponse.success(allComments, message));
@@ -65,8 +65,4 @@ public class CommentsController {
         String message = String.format("%d 태스크의 댓글 삭제", taskId);
         return ResponseEntity.ok(ApiResponse.success(null, message));
     }
-
-
-
-
 }

@@ -9,6 +9,7 @@ import com.example.outsourcing_project.domain.task.domain.repository.TaskReposit
 import com.example.outsourcing_project.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final TaskRepository taskRepository;
 
+    @Transactional
     public CommentCreateResponseDto createComment(Long taskId, String content) {
 
         Task task = getTaskOrThrow(taskId);
@@ -42,35 +44,42 @@ public class CommentService {
     public CommentCreateResponseDto getCommentByTask(Long taskId, Long commentId) {
         Task task = getTaskOrThrow(taskId);
 
-        Comments comment = commentRepository.findByIdAndTask(commentId, task)
-                .orElseThrow(() -> new NotFoundException("해당 태스크에 댓글이 존재하지 않습니다."));
+        Comments comment = getCommentsOrThrow(commentId);
 
         return new CommentCreateResponseDto(comment);
     }
 
+
+    @Transactional
     public CommentUpdateResponseDto updateComments(Long taskId, Long commentId, String comments) {
         Task task = getTaskOrThrow(taskId);
 
-        Comments comment = commentRepository.findByIdAndTask(commentId, task)
-                .orElseThrow(() -> new NotFoundException("해당 태스크에 댓글이 존재하지 않습니다."));
+        Comments comment = getCommentsOrThrow(commentId);
 
         comment.update(comments);
         return new CommentUpdateResponseDto(comment);
     }
 
 
+    @Transactional
     public void deleteComments(Long taskId, Long commentId) {
         Task task = getTaskOrThrow(taskId);
 
-        Comments comment = commentRepository.findByIdAndTask(commentId, task)
-                .orElseThrow(() -> new NotFoundException("해당 태스크에 댓글이 존재하지 않습니다."));
+        Comments comment = getCommentsOrThrow(commentId);
 
         commentRepository.delete(comment);
+
+        // TODO: Soft Delete 처리 메뉴얼
     }
 
-    // 태스크 탐색 & 예외처리 공용 메서드
+    // Task, Comment 탐색 & 예외처리 공용 메서드
     private Task getTaskOrThrow(Long taskId) {
         return taskRepository.findById(taskId)
                 .orElseThrow(() -> new NotFoundException("해당 태스크를 찾을 수 없습니다."));
+    }
+
+    private Comments getCommentsOrThrow(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을 수 없습니다."));
     }
 }
