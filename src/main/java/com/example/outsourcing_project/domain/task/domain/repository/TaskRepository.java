@@ -1,17 +1,38 @@
 package com.example.outsourcing_project.domain.task.domain.repository;
-import com.example.outsourcing_project.domain.dashboard.controller.dto.TodayTasksResponseDto;
-import com.example.outsourcing_project.domain.task.domain.entity.Task;
-import com.example.outsourcing_project.domain.task.domain.entity.TaskStatus;
+
+import com.example.outsourcing_project.domain.task.domain.model.Task;
+import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import com.example.outsourcing_project.domain.dashboard.controller.dto.TodayTasksResponseDto;
 
+
+import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("select COUNT(t) from Task t where t.isDeleted = false and t.creator = :userId")
     long countAll(@Param("userId") Long userId);
+
+
+    // 태스크 전체조회 페이징 조회
+    Page<Task> findAllByIsDeletedFalse(Pageable pageable); // 삭제되지 않은 태스크만 페이징
+
+    // 태스크 검색(제목, 내용, 상태 필터링)
+    @Query("SELECT t From Task t " +
+            "WHERE t.isDeleted = false " +
+            "AND (:title IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+            "AND (:content IS NULL OR LOWER(t.content) LIKE LOWER(CONCAT('%', :content, '%'))) " +
+            "AND (:status IS NULL OR t.status = :status)")
+    Page<Task> searchTasks(
+            @Param("title") String title,
+            @Param("content") String content,
+            @Param("status") TaskStatus status,
+            Pageable pageable
+    );
 
     @Query("select COUNT(t) from Task t where t.status = :status and t.isDeleted = false and t.creator = :userId")
     long countByStatus(@Param("status") TaskStatus status, @Param("userId") Long userId);
@@ -37,5 +58,4 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "when 'LOW' then 3 " +
             "else 4 end")
     List<TodayTasksResponseDto> findTodayTasks(@Param("userId") Long userId);
-
 }
