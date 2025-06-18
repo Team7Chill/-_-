@@ -20,6 +20,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -35,7 +36,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, SecurityContextHolderAwareRequestFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         // 회원가입, 로그인은 인증 제외
-                        .requestMatchers("/api/login","/api/signup", "/api/auth/register").permitAll()
+                        .requestMatchers("/api/login", "/api/auth/register").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/refresh-token").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -43,6 +44,15 @@ public class SecurityConfig {
                         //.requestMatchers("/api/normal/**").hasRole("NORMAL")
                         .anyRequest().authenticated()
                 )
+
+                //필터 등록
+
+                .exceptionHandling(configurer ->
+                        configurer
+                                .authenticationEntryPoint(customAuthenticationEntryPoint)
+//                                .accessDeniedHandler(customAccessDeniedHandler)
+                )
+
                 .build();
     }
 }
