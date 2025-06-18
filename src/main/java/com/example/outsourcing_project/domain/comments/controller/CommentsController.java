@@ -3,9 +3,11 @@ package com.example.outsourcing_project.domain.comments.controller;
 
 import com.example.outsourcing_project.domain.comments.service.CommentService;
 import com.example.outsourcing_project.global.common.ApiResponse;
+import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +22,12 @@ public class CommentsController {
     @PostMapping("/tasks/{taskId}/comments")
     public ResponseEntity<ApiResponse<CommentCreateResponseDto>> createComment(
             @PathVariable Long taskId,
-            @RequestBody @Valid CommentCreateRequestDto request) { // TODO: JWT 통한 사용자 인증 추가 필요
+            @RequestBody @Valid CommentCreateRequestDto request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) { // TODO: JWT 통한 사용자 인증 추가 필요
 
-        CommentCreateResponseDto comment = commentService.createComment(taskId, request.getContent());
+        Long userId = userDetails.getId();
+
+        CommentCreateResponseDto comment = commentService.createComment(taskId, userId, request.getContent());
         return ResponseEntity.ok(ApiResponse.success(comment,"댓글 작성 성공"));
     }
 
@@ -50,8 +55,12 @@ public class CommentsController {
     public ResponseEntity<ApiResponse<CommentUpdateResponseDto>> updateComment(
             @PathVariable Long taskId,
             @PathVariable Long commentId,
-            @RequestBody CommentUpdateRequestDto request) {
-        CommentUpdateResponseDto updateCommentsResponse = commentService.updateComments(taskId, commentId, request.getComments());
+            @RequestBody CommentUpdateRequestDto request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Long userId = userDetails.getId();
+
+        CommentUpdateResponseDto updateCommentsResponse = commentService.updateComments(taskId, userId, commentId, request.getComments());
         String message = String.format("%d 태스크의 댓글 수정", taskId);
         return ResponseEntity.ok(ApiResponse.success(updateCommentsResponse, message));
     }
@@ -60,8 +69,12 @@ public class CommentsController {
     @DeleteMapping("/tasks/{taskId}/comments/{commentId}")
     public ResponseEntity<ApiResponse<Void>> deleteComments(
             @PathVariable Long taskId,
-            @PathVariable Long commentId) {
-        commentService.deleteComments(taskId, commentId);
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        Long userId = userDetails.getId();
+
+        commentService.deleteComments(taskId, userId, commentId);
         String message = String.format("%d 태스크의 댓글 삭제", taskId);
         return ResponseEntity.ok(ApiResponse.success(null, message));
     }

@@ -5,8 +5,10 @@ import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "task_comments")
 @AllArgsConstructor
@@ -28,9 +30,10 @@ public class Comments extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    public Comments(String content, Task task) {
+    public Comments(String content, Task task, User user) {
         this.content = content;
         this.task = task;
+        this.user = user;
     }
 
     public void update(String content) {
