@@ -37,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
 
-        if (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/signup")) {
+        if (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/signup") || requestURI.startsWith("/refresh-token")) {
             filterChain.doFilter(request, response);
             return;
         }
