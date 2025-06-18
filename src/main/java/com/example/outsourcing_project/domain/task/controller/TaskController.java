@@ -3,7 +3,7 @@ package com.example.outsourcing_project.domain.task.controller;
 import com.example.outsourcing_project.domain.task.controller.dto.*;
 import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
 import com.example.outsourcing_project.domain.task.service.TaskService;
-import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
+import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
