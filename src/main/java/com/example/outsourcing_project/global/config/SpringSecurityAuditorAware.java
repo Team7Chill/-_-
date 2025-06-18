@@ -16,7 +16,7 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
         // 인증 정보 없거나 익명 사용자인 경우
         if (authentication == null || !authentication.isAuthenticated()
                 || authentication.getPrincipal().equals("anonymousUser")) {
-            return Optional.empty();
+            return Optional.of("anonymous");
         }
 
         Object principal = authentication.getPrincipal();
@@ -27,6 +27,6 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
         } else if (principal instanceof String username) {
             return Optional.of(username);
         }
-        return Optional.empty();
+        return Optional.of("anonymous");
     }
 }
