@@ -1,6 +1,7 @@
-package com.example.outsourcing_project.domain.user.domain;
+package com.example.outsourcing_project.domain.user.domain.model;
 
 import com.example.outsourcing_project.domain.auth.domain.refresh.RefreshToken;
+import com.example.outsourcing_project.global.common.BaseEntity;
 import com.example.outsourcing_project.global.enums.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ import java.util.List;
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +31,6 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false, length = 50)
-    private String name;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
