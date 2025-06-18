@@ -1,12 +1,12 @@
 package com.example.outsourcing_project.domain.auth.service;
 
-import com.example.outsourcing_project.domain.auth.controller.dto.ApiResponse;
 import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistService;
 import com.example.outsourcing_project.domain.auth.domain.refresh.RefreshTokenService;
 import com.example.outsourcing_project.domain.auth.controller.dto.LoginRequest;
 import com.example.outsourcing_project.domain.auth.service.dto.LoginResponse;
 import com.example.outsourcing_project.domain.user.domain.User;
 import com.example.outsourcing_project.domain.user.domain.UserRepository;
+import com.example.outsourcing_project.global.common.ApiResponse;
 import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

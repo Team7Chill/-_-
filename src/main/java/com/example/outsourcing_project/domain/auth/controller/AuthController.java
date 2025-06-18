@@ -1,11 +1,10 @@
 package com.example.outsourcing_project.domain.auth.controller;
 
-import com.example.outsourcing_project.domain.auth.controller.dto.ApiResponse;
 import com.example.outsourcing_project.domain.auth.controller.dto.LoginRequest;
 import com.example.outsourcing_project.domain.auth.service.AuthService;
 import com.example.outsourcing_project.domain.auth.service.dto.LoginResponse;
 import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistService;
-import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
+import com.example.outsourcing_project.global.common.ApiResponse;
 import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
