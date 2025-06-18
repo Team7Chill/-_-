@@ -1,7 +1,7 @@
 package com.example.outsourcing_project.global.common;
 
-import com.example.outsourcing_project.domain.log.service.LogSaveDto;
-import com.example.outsourcing_project.domain.log.service.LogService;
+import com.example.outsourcing_project.domain.log.LogSaveDto;
+import com.example.outsourcing_project.domain.log.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;

@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.domain.log.controller;
+package com.example.outsourcing_project.global.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
