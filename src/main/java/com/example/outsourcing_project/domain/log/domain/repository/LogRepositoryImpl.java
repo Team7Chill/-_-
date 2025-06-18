@@ -59,7 +59,7 @@ public class LogRepositoryImpl implements LogSearchRepository{
         // 쿼리문 실행
         List<Log> findLogList = queryFactory
                 .selectFrom(log)
-                .leftJoin(log.user, user)
+                .leftJoin(log.user, user).fetchJoin()
                 .where(where)
                 .orderBy(log.createdAt.desc())
                 .offset(pageable.getOffset())
