@@ -52,7 +52,6 @@ public class RefreshTokenService {
         );
     }
 
-    // 이하 기존 메서드 유지 (validateAndGetToken, findByToken, deleteByToken 등)
     public RefreshToken validateAndGetToken(String token) {
         return findByToken(token)
                 .filter(t -> !t.isRevoked())
