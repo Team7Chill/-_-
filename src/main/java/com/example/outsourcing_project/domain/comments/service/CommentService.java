@@ -42,8 +42,7 @@ public class CommentService {
     }
 
     public CommentCreateResponseDto getCommentByTask(Long taskId, Long commentId) {
-        Task task = getTaskOrThrow(taskId);
-
+        getTaskOrThrow(taskId);
         Comments comment = getCommentsOrThrow(commentId);
 
         return new CommentCreateResponseDto(comment);
@@ -52,8 +51,7 @@ public class CommentService {
 
     @Transactional
     public CommentUpdateResponseDto updateComments(Long taskId, Long commentId, String comments) {
-        Task task = getTaskOrThrow(taskId);
-
+        getTaskOrThrow(taskId);
         Comments comment = getCommentsOrThrow(commentId);
 
         comment.update(comments);
@@ -63,13 +61,16 @@ public class CommentService {
 
     @Transactional
     public void deleteComments(Long taskId, Long commentId) {
-        Task task = getTaskOrThrow(taskId);
-
+        getTaskOrThrow(taskId);
         Comments comment = getCommentsOrThrow(commentId);
 
-        commentRepository.delete(comment);
-
         // TODO: Soft Delete 처리 메뉴얼
+        comment.setDeleted(true);
+        commentRepository.save(comment);
+
+        // commentRepository.delete(comment);
+
+
     }
 
     // Task, Comment 탐색 & 예외처리 공용 메서드
