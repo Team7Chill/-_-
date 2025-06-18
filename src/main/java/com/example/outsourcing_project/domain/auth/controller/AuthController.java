@@ -34,11 +34,9 @@ public class AuthController {
 
         LoginResponse login = authService.login(request);
 
-        // 응답 헤더에 AccessToken 추가
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", login.getAccessToken());
 
-        // RefreshToken 쿠키 세팅
         cookieUtil.setRefreshTokenCookie(
                 response,
                 login.getRefreshToken(),
@@ -55,10 +53,8 @@ public class AuthController {
             @CookieValue(value = "refreshToken", required = false) String refreshToken,
             HttpServletResponse response) {
 
-        // 서비스에 로그아웃 로직 위임
         authService.logout(bearerToken, refreshToken, response);
 
-        // 로그아웃 성공 응답 반환
         return ResponseEntity.ok(ApiResponse.success(null, "로그아웃 성공"));
     }
 
