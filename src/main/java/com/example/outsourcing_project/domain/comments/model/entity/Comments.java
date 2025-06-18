@@ -30,9 +30,10 @@ public class Comments extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    public Comments(String content, Task task) {
+    public Comments(String content, Task task, User user) {
         this.content = content;
         this.task = task;
+        this.user = user;
     }
 
     public void update(String content) {

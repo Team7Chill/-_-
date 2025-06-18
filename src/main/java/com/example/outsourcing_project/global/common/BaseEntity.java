@@ -5,6 +5,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@Where(clause = "is_deleted = false")
 public class BaseEntity {
 
     @CreatedDate
@@ -33,8 +35,8 @@ public class BaseEntity {
     @LastModifiedBy
     private String updatedBy;
 
-    @Column(nullable = false) // columnDefinition = "BOOLEAN DEFAULT FALSE" 벨리데이션 보류
-    private boolean isDeleted;
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
 
