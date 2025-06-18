@@ -6,7 +6,6 @@ import com.example.outsourcing_project.domain.auth.service.RefreshTokenService;
 import com.example.outsourcing_project.domain.auth.service.AuthService;
 import com.example.outsourcing_project.domain.auth.service.dto.LoginResponse;
 import com.example.outsourcing_project.global.common.ApiResponse;
-import com.example.outsourcing_project.global.exception.UnauthorizedException;
 import com.example.outsourcing_project.global.security.cookie.CookieUtil;
 import com.example.outsourcing_project.global.security.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;

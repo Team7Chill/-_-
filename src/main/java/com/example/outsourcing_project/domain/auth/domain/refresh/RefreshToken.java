@@ -3,7 +3,6 @@ package com.example.outsourcing_project.domain.auth.domain.refresh;
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.Instant;
 
 @Entity

@@ -15,7 +15,7 @@ public class CookieUtil {
     public static Cookie createCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // HTTPS 환경이면 true로 변경하세요
+        cookie.setSecure(false); // HTTPS 환경이면 변경하세요
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
         return cookie;
