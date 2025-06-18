@@ -30,7 +30,7 @@ public class CommentCreateResponseDto {
         return CommentCreateResponseDto.builder()
                 .id(comment.getId())
                 .userId(comment.getUser())
-                .taskId(comment.getTask()
+                .taskId(comment.getTask())
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
                 .build();
