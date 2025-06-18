@@ -65,7 +65,7 @@ public class Task extends BaseEntity {
     private LocalDateTime deletedAt;
 
 
-    // 생성일, 수정일은 BaseTaskTimeEntity에서...
+    // 생성일, 수정일은 BaseEntity에서...
 
     public Task() {}
 
