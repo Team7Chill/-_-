@@ -1,6 +1,8 @@
 package com.example.outsourcing_project.domain.log.controller;
 
 import com.example.outsourcing_project.domain.log.service.LogService;
+import com.example.outsourcing_project.global.common.ApiResponse;
+import com.example.outsourcing_project.global.common.PageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +21,7 @@ public class LogController {
     private LogService logService;
 
     @GetMapping("/api/logs")
-    public ResponseEntity<Page<LogResponseDto>> getLogs(
+    public ResponseEntity<ApiResponse<PageResponse<LogResponseDto>>> getLogs(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam Optional<String> activityType,
@@ -30,9 +32,7 @@ public class LogController {
             @RequestParam(defaultValue = "DESC") String direction //ASC, DESC
     ) {
 
-        //UserId 받는 로직 추가
-        Long userId = 1L;
-
+        LogRequestDto requestDto = LogRequestDto.toBuild(activityType, activityId, startDate, endDate);
 
         Page<LogResponseDto> logPage = logService.getLogs(
                 PageRequest.of(
@@ -41,13 +41,10 @@ public class LogController {
                         Sort.Direction.fromString(direction),
                         sort
                 ),
-                LogRequestDto.builder()
-                        .userId(userId)
-                        .activityType(activityType.orElse(null))
-                        .activityId(activityId.orElse(null))
-                        .startDate(startDate.orElse(null))
-                        .endDate(endDate.orElse(null))
-                        .build());
-        return ResponseEntity.ok(logPage);
+                requestDto);
+
+        PageResponse<LogResponseDto> response = PageResponse.toResponse(logPage);
+
+        return ResponseEntity.ok(ApiResponse.success(response, "로그 조회 성공"));
     }
 }
