@@ -19,12 +19,12 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
-
-    private String currentRefreshToken; // 현재 요청에서 처리한 리프레시 토큰 저장용 (쿠키 세팅 시 사용)
+    private final CookieUtil cookieUtil;
+    private String currentRefreshToken;
 
     public String refreshAccessTokenFromRequest(HttpServletRequest request) {
         // 1. 쿠키에서 리프레시 토큰 추출
-        currentRefreshToken = CookieUtil.getCookie(request, "refreshToken")
+        currentRefreshToken = cookieUtil.getCookie(request, "refreshToken")
                 .orElseThrow(() -> new UnauthorizedException("리프레시 토큰이 존재하지 않습니다."))
                 .getValue();
 
@@ -45,7 +45,7 @@ public class RefreshTokenService {
         if (currentRefreshToken == null) {
             throw new UnauthorizedException("Refresh token 값이 설정되지 않았습니다.");
         }
-        CookieUtil.setRefreshTokenCookie(
+        cookieUtil.setRefreshTokenCookie(
                 response,
                 currentRefreshToken,
                 (int) (jwtUtil.getRefreshTokenExpireTime() / 1000)

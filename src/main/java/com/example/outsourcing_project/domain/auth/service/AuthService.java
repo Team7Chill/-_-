@@ -23,6 +23,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
     private final RefreshTokenService refreshTokenService;
     private final JwtBlacklistService jwtBlacklistService;
 
@@ -61,7 +62,7 @@ public class AuthService {
             refreshTokenService.deleteByToken(refreshToken);
         }
 
-        Cookie deleteCookie = CookieUtil.deleteCookie("refreshToken");
-        CookieUtil.addCookie(response, deleteCookie);
+        Cookie deleteCookie = cookieUtil.deleteCookie("refreshToken");
+        cookieUtil.addCookie(response, deleteCookie);
     }
 }

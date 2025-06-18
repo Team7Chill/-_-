@@ -24,6 +24,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
@@ -38,7 +39,7 @@ public class AuthController {
         headers.add("Authorization", login.getAccessToken());
 
         // RefreshToken 쿠키 세팅
-        CookieUtil.setRefreshTokenCookie(
+        cookieUtil.setRefreshTokenCookie(
                 response,
                 login.getRefreshToken(),
                 (int) (jwtUtil.getRefreshTokenExpireTime() / 1000)
