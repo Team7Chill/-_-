@@ -11,6 +11,8 @@ import com.example.outsourcing_project.domain.user.domain.repository.UserReposit
 import com.example.outsourcing_project.global.exception.NotFoundException;
 import com.example.outsourcing_project.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,14 +39,9 @@ public class CommentService {
     }
 
 
-    public List<CommentCreateResponseDto> getAllComments(Long taskId) {
-        Task task = getTaskOrThrow(taskId);
-
-        List<Comments> commentsList = commentRepository.findByTask(task);
-
-        return commentsList.stream()
-                .map(CommentCreateResponseDto::new)
-                .toList();
+    public Page<CommentCreateResponseDto> getAllComments(Long taskId, Pageable pageable) {
+        Page<Comments> commentPage = commentRepository.findByTaskId(taskId, pageable);
+        return commentPage.map(CommentCreateResponseDto::from);
     }
 
     public CommentCreateResponseDto getCommentByTask(Long taskId, Long commentId) {
