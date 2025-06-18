@@ -1,5 +1,7 @@
-package com.example.outsourcing_project.domain.auth.domain.jwtblacklist;
+package com.example.outsourcing_project.domain.auth.service;
 
+import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistRepository;
+import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistToken;
 import com.example.outsourcing_project.global.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

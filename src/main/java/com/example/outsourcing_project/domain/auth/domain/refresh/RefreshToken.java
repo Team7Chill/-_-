@@ -28,11 +28,12 @@ public class RefreshToken {
     @Column(name = "issued_at", nullable = false)
     private Instant issuedAt;
 
+    @Getter
+    @Setter
     @Column(name = "expiry_date", nullable = false)
     private Instant expiryDate;
 
     @Setter
     @Column(name = "is_revoked", nullable = false)
     private boolean isRevoked = false;
-
 }
