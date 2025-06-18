@@ -33,7 +33,7 @@ public class LogServiceTest {
     private LogAspect logAspect;
 
     @Test
-    public void log_변경내용_저장에_성공한다(){
+    public void log_변경내용_저장에_성공한다() {
         // given
         when(requestAttributes.getRequest()).thenReturn(request);
         RequestContextHolder.setRequestAttributes(requestAttributes);
@@ -87,7 +87,7 @@ public class LogServiceTest {
     }
 
     @Test
-    public void log_로그인_내역_저장에_성공한다(){
+    public void log_로그인_내역_저장에_성공한다() {
         // given
         when(requestAttributes.getRequest()).thenReturn(request);
         RequestContextHolder.setRequestAttributes(requestAttributes);
