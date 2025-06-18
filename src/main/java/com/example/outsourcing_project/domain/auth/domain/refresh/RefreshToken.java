@@ -1,9 +1,8 @@
 package com.example.outsourcing_project.domain.auth.domain.refresh;
 
-import com.example.outsourcing_project.domain.user.domain.User;
+import com.example.outsourcing_project.domain.user.domain.model.User;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.Instant;
 
 @Entity
@@ -28,11 +27,12 @@ public class RefreshToken {
     @Column(name = "issued_at", nullable = false)
     private Instant issuedAt;
 
+    @Getter
+    @Setter
     @Column(name = "expiry_date", nullable = false)
     private Instant expiryDate;
 
     @Setter
     @Column(name = "is_revoked", nullable = false)
     private boolean isRevoked = false;
-
 }
