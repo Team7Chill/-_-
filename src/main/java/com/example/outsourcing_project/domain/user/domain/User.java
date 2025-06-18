@@ -3,10 +3,7 @@ package com.example.outsourcing_project.domain.user.domain;
 import com.example.outsourcing_project.domain.auth.domain.refresh.RefreshToken;
 import com.example.outsourcing_project.global.enums.UserRoleEnum;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class User {
 
     @Id
