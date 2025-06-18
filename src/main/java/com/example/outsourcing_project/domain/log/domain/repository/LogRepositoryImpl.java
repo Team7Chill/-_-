@@ -3,7 +3,7 @@ package com.example.outsourcing_project.domain.log.domain.repository;
 import com.example.outsourcing_project.domain.log.controller.LogRequestDto;
 import com.example.outsourcing_project.domain.log.domain.model.Log;
 import com.example.outsourcing_project.domain.log.domain.model.QLog;
-import com.example.outsourcing_project.domain.user.domain.QUser;
+import com.example.outsourcing_project.domain.user.domain.model.QUser;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

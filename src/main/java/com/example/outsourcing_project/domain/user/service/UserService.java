@@ -1,8 +1,8 @@
 package com.example.outsourcing_project.domain.user.service;
 
 import com.example.outsourcing_project.domain.user.controller.dto.RegisterRequestDto;
-import com.example.outsourcing_project.domain.user.domain.User;
-import com.example.outsourcing_project.domain.user.domain.UserRepository;
+import com.example.outsourcing_project.domain.user.domain.model.User;
+import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
 import com.example.outsourcing_project.global.enums.UserRoleEnum;
 import com.example.outsourcing_project.global.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,6 @@ public class UserService {
                 .username(dto.getUsername())
                 .email(dto.getEmail())
                 .password(encodedPassword)
-                .name(dto.getName())
                 .role(UserRoleEnum.USER)
                 .build();
 
