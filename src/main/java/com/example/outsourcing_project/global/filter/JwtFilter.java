@@ -3,8 +3,8 @@ package com.example.outsourcing_project.global.filter;
 import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistService;
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
-import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
-import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
+import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
+import com.example.outsourcing_project.global.security.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String subject = jwtUtil.extractuserId(jwt);
+        String subject = jwtUtil.extractUserId(jwt);
         Long userId = Long.parseLong(subject);
 
         User user = userRepository.findById(userId)

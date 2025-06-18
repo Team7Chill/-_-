@@ -1,6 +1,6 @@
 package com.example.outsourcing_project.global.config;
 
-import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
+import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
 import lombok.NonNull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

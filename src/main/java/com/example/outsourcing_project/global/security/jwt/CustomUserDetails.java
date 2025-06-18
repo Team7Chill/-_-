@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.global.security.Jwt;
+package com.example.outsourcing_project.global.security.jwt;
 
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
