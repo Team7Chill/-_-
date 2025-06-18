@@ -16,6 +16,7 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final Long id;
+    private final String name;
     private final String username;
     private final String email;
     @JsonIgnore
@@ -24,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails(User user) {
         this.id = user.getId();
+        this.name = user.getName();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.password = user.getPassword();
