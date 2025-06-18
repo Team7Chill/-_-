@@ -1,8 +1,8 @@
 package com.example.outsourcing_project.domain.user.controller;
 
 import com.example.outsourcing_project.domain.user.controller.dto.RegisterRequestDto;
-import com.example.outsourcing_project.domain.user.controller.dto.UserResponseDto;
 import com.example.outsourcing_project.domain.user.service.UserService;
+import com.example.outsourcing_project.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(@RequestBody @Valid RegisterRequestDto requestDto) {
-        UserResponseDto responseDto = userService.register(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody  RegisterRequestDto requestDto) {
+        userService.register(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(null, "화원가입이 완료되었습니다."));
     }
 }

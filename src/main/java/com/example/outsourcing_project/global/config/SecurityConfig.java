@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, SecurityContextHolderAwareRequestFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         // 회원가입, 로그인은 인증 제외
-                        .requestMatchers("/api/login","/api/signup", "/api/auth/register").permitAll()
+                        .requestMatchers("/api/login", "/api/auth/register").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/refresh-token").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
