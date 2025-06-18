@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class LogResponseDto {
     @Setter
     private Long id;
-    //private String username;
+    private String username;
     private Long activityId;
     private String activityType;
     private String contents;
@@ -21,7 +21,7 @@ public class LogResponseDto {
 
     public LogResponseDto toDto(Log log) {
         this.id = log.getId();
-        //this.username = log.getUser().getUsername();
+        this.username = log.getUser().getUsername();
         this.activityId = log.getActivityId();
         this.activityType = log.getActivityType();
         this.contents = log.getContents();
