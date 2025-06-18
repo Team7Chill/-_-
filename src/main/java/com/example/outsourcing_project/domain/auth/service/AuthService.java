@@ -4,8 +4,8 @@ import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlackl
 import com.example.outsourcing_project.domain.auth.domain.refresh.RefreshTokenService;
 import com.example.outsourcing_project.domain.auth.controller.dto.LoginRequest;
 import com.example.outsourcing_project.domain.auth.service.dto.LoginResponse;
-import com.example.outsourcing_project.domain.user.domain.User;
-import com.example.outsourcing_project.domain.user.domain.UserRepository;
+import com.example.outsourcing_project.domain.user.domain.model.User;
+import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
 import com.example.outsourcing_project.global.common.ApiResponse;
 import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;

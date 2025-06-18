@@ -1,6 +1,6 @@
 package com.example.outsourcing_project.global.security.Jwt;
 
-import com.example.outsourcing_project.domain.user.domain.User;
+import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.ToString;

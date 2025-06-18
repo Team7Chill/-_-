@@ -1,8 +1,8 @@
 package com.example.outsourcing_project.global.filter;
 
 import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistService;
-import com.example.outsourcing_project.domain.user.domain.User;
-import com.example.outsourcing_project.domain.user.domain.UserRepository;
+import com.example.outsourcing_project.domain.user.domain.model.User;
+import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
 import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
 import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
