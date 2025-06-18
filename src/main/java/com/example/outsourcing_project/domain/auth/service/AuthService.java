@@ -32,9 +32,9 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UnauthorizedException("가입되지 않은 유저입니다."));
 
-//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            throw new UnauthorizedException("잘못된 비밀번호입니다.");
-//        }
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new UnauthorizedException("잘못된 비밀번호입니다.");
+        }
 
         String accessToken = jwtUtil.createAccessToken(user.getId(), user.getRole());
 
@@ -57,8 +57,7 @@ public class AuthService {
         jwtBlacklistService.addBlacklist(accessToken);
 
         if (refreshToken != null && !refreshToken.isEmpty()) {
-            String refreshJti = jwtUtil.extractJti(refreshToken);
-            jwtBlacklistService.addBlacklist(refreshJti);
+            jwtBlacklistService.addBlacklist(refreshToken);
             refreshTokenService.deleteByToken(refreshToken);
         }
 
