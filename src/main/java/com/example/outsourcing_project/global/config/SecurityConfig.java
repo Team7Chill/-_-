@@ -37,6 +37,7 @@ public class SecurityConfig {
                         // 회원가입, 로그인은 인증 제외
                         .requestMatchers("/api/login","/api/signup").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/refresh-token").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").hasRole("USER")
                         //.requestMatchers("/api/normal/**").hasRole("NORMAL")

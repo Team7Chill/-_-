@@ -1,6 +1,6 @@
 package com.example.outsourcing_project.domain.log.domain.model;
 
-import com.example.outsourcing_project.domain.user.domain.User;
+import com.example.outsourcing_project.domain.user.domain.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +36,7 @@ public class Log {
     @Column(nullable = false)
     private String contents;
 
+    //Base Entity 병합 이후 수정
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;

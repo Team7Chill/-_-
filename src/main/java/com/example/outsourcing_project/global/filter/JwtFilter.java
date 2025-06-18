@@ -1,10 +1,11 @@
 package com.example.outsourcing_project.global.filter;
 
-import com.example.outsourcing_project.domain.auth.domain.jwtblacklist.JwtBlacklistService;
-import com.example.outsourcing_project.domain.user.domain.User;
-import com.example.outsourcing_project.domain.user.domain.UserRepository;
-import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
-import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
+import com.example.outsourcing_project.domain.auth.service.JwtBlacklistService;
+import com.example.outsourcing_project.domain.user.domain.model.User;
+import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
+import com.example.outsourcing_project.global.exception.UnauthorizedException;
+import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
+import com.example.outsourcing_project.global.security.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,11 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final JwtBlacklistService jwtBlacklistService;
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getServletPath();
-        return path.equals("/api/login") || path.equals("/api/signup");
-    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -37,32 +34,36 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+
+        String requestURI = request.getRequestURI();
+
+        if (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/signup") || requestURI.startsWith("/refresh-token")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String bearerJwt = request.getHeader("Authorization");
 
         if (bearerJwt == null || !bearerJwt.startsWith("Bearer ")) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 토큰이 필요합니다.");
-            return;
+            throw new UnauthorizedException("JWT 토큰이 필요합니다.");
         }
 
         String jwt = jwtUtil.substringToken(bearerJwt);
 
         if (!jwtUtil.validateToken(jwt)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Unauthorized\"}");
-            return;
+            throw new UnauthorizedException("유효하지 않은 JWT 토큰입니다.");
         }
 
         String jti = jwtUtil.extractJti(jwt);
         if (jwtBlacklistService.isBlacklistedByJti(jti)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그아웃된 토큰입니다.");
-            return;
+            throw new UnauthorizedException("로그아웃된 토큰입니다.");
         }
 
-        String subject = jwtUtil.extractuserId(jwt);
+        String subject = jwtUtil.extractUserId(jwt);
         Long userId = Long.parseLong(subject);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+                .orElseThrow(() -> new UnauthorizedException("해당 유저가 없습니다."));
 
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
 

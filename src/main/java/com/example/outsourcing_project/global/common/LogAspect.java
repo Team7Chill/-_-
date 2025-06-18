@@ -5,8 +5,8 @@ import com.example.outsourcing_project.domain.comments.controller.CommentCreateR
 import com.example.outsourcing_project.domain.log.domain.model.LoggingType;
 import com.example.outsourcing_project.domain.log.service.LogSaveDto;
 import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskResponseDto;
-import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
-import com.example.outsourcing_project.global.security.Jwt.JwtUtil;
+import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
+import com.example.outsourcing_project.global.security.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -144,7 +144,7 @@ public class LogAspect {
     //토큰에서 userId 생성
     private Long getUserIdFromToken(String token){
         String subStringToken = jwtUtil.substringToken(token);
-        String userId = jwtUtil.extractuserId(subStringToken);
+        String userId = jwtUtil.extractUserId(subStringToken);
         return Long.parseLong(userId);
     }
 }
