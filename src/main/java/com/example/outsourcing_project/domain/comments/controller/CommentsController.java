@@ -29,7 +29,6 @@ public class CommentsController {
             @RequestBody @Valid CommentCreateRequestDto request,
             @AuthenticationPrincipal CustomUserDetails userDetails) { // TODO: JWT 통한 사용자 인증 추가 필요
 
-
         Long userId = userDetails.getId();
 
         CommentCreateResponseDto comment = commentService.createComment(taskId, userId, request.getContent());

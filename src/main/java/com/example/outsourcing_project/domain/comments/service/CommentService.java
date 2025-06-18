@@ -79,7 +79,7 @@ public class CommentService {
         }
 
         // TODO: Soft Delete 처리 메뉴얼
-        comment.setDeleted(true);
+        comment.delete();
 
         // commentRepository.delete(comment);
     }
