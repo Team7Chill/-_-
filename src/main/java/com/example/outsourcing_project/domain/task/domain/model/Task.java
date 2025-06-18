@@ -56,14 +56,6 @@ public class Task extends BaseEntity {
     @Column(name = "deadline")
     private LocalDateTime deadLine;
 
-    // 삭제여부
-    @Column(name = "is_deleted")
-    private Boolean isDeleted = false;
-
-    // 삭제일
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
 
     // 생성일, 수정일은 BaseEntity에서...
 

@@ -112,12 +112,8 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
 
-        if (Boolean.TRUE.equals(task.getIsDeleted())) {
-            throw new IllegalArgumentException("이미 삭제된 태스크입니다.");
-        }
 
-        task.setIsDeleted(true);
-        task.setDeletedAt(LocalDateTime.now());
+        task.setDeleted(true);
 
         taskRepository.save(task);
     }
