@@ -4,9 +4,10 @@ import com.example.outsourcing_project.domain.log.controller.LogRequestDto;
 import com.example.outsourcing_project.domain.log.controller.LogResponseDto;
 import com.example.outsourcing_project.domain.log.domain.model.Log;
 import com.example.outsourcing_project.domain.log.domain.repository.LogRepository;
-import com.example.outsourcing_project.domain.user.domain.User;
+import com.example.outsourcing_project.domain.user.domain.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import com.example.outsourcing_project.global.exception.BadRequestException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +40,12 @@ public class LogService {
         Page<Log> findLog = logRepository.findAllFromQueryDsl(logRequestDto,pageable);
         
         //Log 리스트를 Dto 로 변환
-        List<LogResponseDto> logResponseDtos = findLog.getContent().stream()
+        List<LogResponseDto> logResponseDto = findLog.getContent().stream()
                 .map(log -> new LogResponseDto().toDto(log)) 
                 .collect(Collectors.toList());
 
         // PageImpl 을 사용하여 반환
-        return new PageImpl<>(logResponseDtos, pageable, findLog.getTotalElements());
+        return new PageImpl<>(logResponseDto, pageable, findLog.getTotalElements());
 
     }
 
@@ -55,18 +56,18 @@ public class LogService {
 
         //타입이 없는데 활동 ID 만 존재할경우 예외처리
         if(logRequestDto.getActivityId() != null){
-            throw new IllegalArgumentException("활동 유형을 선택해야 합니다.");
+            throw new BadRequestException("활동 유형을 선택해야 합니다.");
         }
     }
 
     private void validateEndDateEarlierThanStartDate(LogRequestDto logRequestDto){
-        LocalDateTime startDate = logRequestDto.getStartDate();
-        LocalDateTime endDate = logRequestDto.getEndDate();
+        LocalDate startDate = logRequestDto.getStartDate();
+        LocalDate endDate = logRequestDto.getEndDate();
 
         if (startDate == null || endDate == null) return;
 
         if(startDate.isAfter(endDate)){
-            throw new IllegalArgumentException("시작일은 종료일보다 빠르거나 같아야 합니다.");
+            throw new BadRequestException("시작일은 종료일보다 빠르거나 같아야 합니다.");
         }
     }
 
