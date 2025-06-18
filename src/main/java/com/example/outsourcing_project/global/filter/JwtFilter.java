@@ -34,22 +34,11 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-
-        String requestURI = request.getRequestURI();
-
-        if (
-                requestURI.startsWith("/api/login") ||
-                requestURI.startsWith("/api/signup") ||
-                requestURI.startsWith("/api/auth/register") || //회원가입api
-                requestURI.startsWith("/refresh-token")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String bearerJwt = request.getHeader("Authorization");
 
         if (bearerJwt == null || !bearerJwt.startsWith("Bearer ")) {
-            throw new UnauthorizedException("JWT 토큰이 필요합니다.");
+            filterChain.doFilter(request, response);
+            return;
         }
 
         String jwt = jwtUtil.substringToken(bearerJwt);
