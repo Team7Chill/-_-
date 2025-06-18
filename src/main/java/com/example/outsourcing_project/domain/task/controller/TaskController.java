@@ -3,6 +3,7 @@ package com.example.outsourcing_project.domain.task.controller;
 import com.example.outsourcing_project.domain.task.controller.dto.*;
 import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
 import com.example.outsourcing_project.domain.task.service.TaskService;
+import com.example.outsourcing_project.global.security.Jwt.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -25,12 +28,15 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<CustomResponseDto<CreateTaskResponseDto>> createTask(@Valid @RequestBody CreateTaskRequestDto createTaskRequestDto) {
 
-//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//    Long creatorId = ((AuthUserDto) authentication.getPrincipal()).getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Long exUserId = 1L;
+        // CustomUserDetails로 캐스팅하여 ID 추출
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long creatorId = userDetails.getId();
 
-        CreateTaskResponseDto responseDto = taskService.createTask(createTaskRequestDto, exUserId);
+//        Long exUserId = 1L;
+
+        CreateTaskResponseDto responseDto = taskService.createTask(createTaskRequestDto, creatorId);
 
         CustomResponseDto<CreateTaskResponseDto> customResponseDto = new CustomResponseDto<>(
                 true,
@@ -63,9 +69,9 @@ public class TaskController {
     public ResponseEntity<CustomResponseDto<Page<TaskResponseDto>>> searchTask(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String content,
-            @RequestParam(required = false)TaskStatus status,
+            @RequestParam(required = false) TaskStatus status,
             Pageable pageable
-            ) {
+    ) {
         Page<TaskResponseDto> result = taskService.searchTasks(title, content, status, pageable);
 
         CustomResponseDto<Page<TaskResponseDto>> responseDto = new CustomResponseDto<>(
@@ -98,7 +104,7 @@ public class TaskController {
     public ResponseEntity<CustomResponseDto<TaskResponseDto>> updateTask(
             @PathVariable Long taskId,
             @RequestBody UpdateTaskRequestDto updateTaskRequestDto
-            ) {
+    ) {
 
         TaskResponseDto updatedTask = taskService.updateTask(updateTaskRequestDto, taskId);
 
