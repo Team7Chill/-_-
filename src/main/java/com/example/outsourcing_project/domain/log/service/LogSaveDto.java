@@ -9,16 +9,16 @@ import lombok.Setter;
 @Setter
 public class LogSaveDto {
 
-    //private User user;
+    private Long userId;
     private Long activityId;
     private String activityType;
     private String method;
     private String uri;
     private String contents;
 
-    public Log toEntity() {
+    public Log toEntity(User userRef) {
         Log log = new Log();
-        //log.setUser(this.user);
+        log.setUser(userRef);
         log.setActivityId(this.activityId);
         log.setActivityType(this.activityType);
         log.setMethod(this.method);

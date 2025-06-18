@@ -4,6 +4,9 @@ import com.example.outsourcing_project.domain.log.controller.LogRequestDto;
 import com.example.outsourcing_project.domain.log.controller.LogResponseDto;
 import com.example.outsourcing_project.domain.log.domain.model.Log;
 import com.example.outsourcing_project.domain.log.domain.repository.LogRepository;
+import com.example.outsourcing_project.domain.user.domain.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,9 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class LogService {
+
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     private LogRepository logRepository;
 
@@ -65,15 +71,12 @@ public class LogService {
     }
 
     @Transactional
-    public LogResponseDto testCode(LogResponseDto dto){
-        System.out.println(dto.toString());
-        return dto;
-    }
-
-    @Transactional
     public void addLog(LogSaveDto logSaveDto){
 
-        Log log = logSaveDto.toEntity();
+        //UserId 정보만 생성
+        User userRef = entityManager.getReference(User.class, logSaveDto.getUserId());
+
+        Log log = logSaveDto.toEntity(userRef);
 
         logRepository.save(log);
     }

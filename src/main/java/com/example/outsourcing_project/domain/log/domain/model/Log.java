@@ -16,10 +16,10 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Setter
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private Long activityId;
