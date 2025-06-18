@@ -26,11 +26,21 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final JwtBlacklistService jwtBlacklistService;
 
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+
+
+        String requestURI = request.getRequestURI();
+
+        if (requestURI.startsWith("/api/login") || requestURI.startsWith("/api/signup")) {
+            filterChain.doFilter(request, response); // 바로 다음 필터로 넘김
+            return;
+        }
 
         String bearerJwt = request.getHeader("Authorization");
 
