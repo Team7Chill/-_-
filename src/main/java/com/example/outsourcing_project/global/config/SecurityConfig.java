@@ -20,6 +20,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,6 +44,15 @@ public class SecurityConfig {
                         //.requestMatchers("/api/normal/**").hasRole("NORMAL")
                         .anyRequest().authenticated()
                 )
+
+                //필터 등록
+
+                .exceptionHandling(configurer ->
+                        configurer
+                                .authenticationEntryPoint(customAuthenticationEntryPoint)
+//                                .accessDeniedHandler(customAccessDeniedHandler)
+                )
+
                 .build();
     }
 }
