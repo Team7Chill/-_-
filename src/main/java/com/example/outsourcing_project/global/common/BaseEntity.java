@@ -40,12 +40,9 @@ public class BaseEntity {
 
     private LocalDateTime deletedAt;
 
-    public void setDeletedAt(boolean isDeleted) {
-        if (isDeleted) {
-            this.deletedAt = LocalDateTime.now();
-        } else {
-            this.deletedAt = null;
-        }
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+        isDeleted = true;
     }
 
     /**
