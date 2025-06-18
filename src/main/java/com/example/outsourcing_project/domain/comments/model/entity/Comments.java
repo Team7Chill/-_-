@@ -5,8 +5,10 @@ import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "task_comments")
 @AllArgsConstructor
