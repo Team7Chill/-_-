@@ -35,7 +35,7 @@ public class TaskService {
                 .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
 
 
-        TaskStatus taskStatus = TaskStatus.TODO;
+        TaskStatus taskStatus = TaskStatus.TODO; //초기 상태 설정
 
         // Task 생성
         Task task = new Task(creator, manager, requestDto.getTitle(), requestDto.getContent(), requestDto.getPriority(), taskStatus, requestDto.getStartDate(), requestDto.getDeadLine());

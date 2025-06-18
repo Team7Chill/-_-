@@ -34,8 +34,6 @@ public class TaskController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long creatorId = userDetails.getId();
 
-//        Long exUserId = 1L;
-
         CreateTaskResponseDto responseDto = taskService.createTask(createTaskRequestDto, creatorId);
 
         CustomResponseDto<CreateTaskResponseDto> customResponseDto = new CustomResponseDto<>(
