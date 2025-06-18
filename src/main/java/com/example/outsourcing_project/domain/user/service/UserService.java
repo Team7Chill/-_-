@@ -6,6 +6,7 @@ import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
 import com.example.outsourcing_project.global.enums.UserRoleEnum;
 import com.example.outsourcing_project.global.exception.BadRequestException;
+import com.example.outsourcing_project.global.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +20,15 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponseDto register(RegisterRequestDto dto) {
+    public void register(RegisterRequestDto dto) {
         // 이메일 중복 체크
         if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new BadRequestException("이미 사용 중인 이메일입니다.");
+            throw new ConflictException("이미 사용 중인 이메일입니다.");
         }
 
         // 아이디 중복 체크
         if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new BadRequestException("이미 사용 중인 아이디입니다.");
+            throw new ConflictException("이미 사용 중인 아이디입니다.");
         }
 
         // 비밀번호 암호화
@@ -42,16 +43,7 @@ public class UserService {
                 .build();
 
         // 저장
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
 
-        // 응답 DTO 반환
-        return UserResponseDto.builder()
-                .id(savedUser.getId())
-                .username(savedUser.getUsername())
-                .email(savedUser.getEmail())
-                .name(savedUser.getName())
-                .role(savedUser.getRole().name())
-                .createdAt(savedUser.getCreatedAt())
-                .build();
     }
 }
