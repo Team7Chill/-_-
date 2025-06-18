@@ -1,6 +1,7 @@
 package com.example.outsourcing_project.domain.user.service;
 
 import com.example.outsourcing_project.domain.user.controller.dto.RegisterRequestDto;
+import com.example.outsourcing_project.domain.user.controller.dto.UserResponseDto;
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
 import com.example.outsourcing_project.global.enums.UserRoleEnum;
@@ -18,7 +19,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void register(RegisterRequestDto dto) {
+    public UserResponseDto register(RegisterRequestDto dto) {
         // 이메일 중복 체크
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new BadRequestException("이미 사용 중인 이메일입니다.");
@@ -41,6 +42,16 @@ public class UserService {
                 .build();
 
         // 저장
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // 응답 DTO 반환
+        return UserResponseDto.builder()
+                .id(savedUser.getId())
+                .username(savedUser.getUsername())
+                .email(savedUser.getEmail())
+                .name(savedUser.getName())
+                .role(savedUser.getRole().name())
+                .createdAt(savedUser.getCreatedAt())
+                .build();
     }
 }
