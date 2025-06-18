@@ -14,9 +14,9 @@ import com.example.outsourcing_project.domain.dashboard.controller.dto.TodayTask
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
+    //전체 태스크 수
     @Query("select COUNT(t) from Task t where t.isDeleted = false and t.creator = :userId")
     long countAll(@Param("userId") Long userId);
-
 
     // 태스크 전체조회 페이징 조회
     Page<Task> findAllByIsDeletedFalse(Pageable pageable); // 삭제되지 않은 태스크만 페이징
@@ -34,9 +34,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             Pageable pageable
     );
 
+    // 상태별 태스크 수
     @Query("select COUNT(t) from Task t where t.status = :status and t.isDeleted = false and t.creator = :userId")
     long countByStatus(@Param("status") TaskStatus status, @Param("userId") Long userId);
 
+    // 마감 기한 초과 태스크 수
     @Query("select COUNT(t) from Task t " +
             "where t.status in ('TODO', 'IN_PROGRESS') " +
             "and t.deadLine < current_timestamp " +
@@ -44,6 +46,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "and t.creator = :userId")
     long countOverdueTasks(@Param("userId") Long userId);
 
+    // 오늘의 태스크(우선순위 정렬)
     @Query("select new com.example.outsourcing_project.domain.dashboard.controller.dto.TodayTasksResponseDto(" +
             "t.id, t.title, t.priority, t.status, t.deadLine) " +
             "from Task t " +

@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class TodayTasksResponseDto {
-    private Long id;
-    private String title;
-    private TaskPriority priority;
-    private TaskStatus status;
-    private LocalDateTime deadline;
+    private Long id; // 태스크 ID
+    private String title; // 태스크 제목
+    private TaskPriority priority; // 태스크 우선순위
+    private TaskStatus status; // 태스크 상태
+    private LocalDateTime deadline; // 마감 기한
 }
