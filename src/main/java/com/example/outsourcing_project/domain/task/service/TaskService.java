@@ -4,14 +4,13 @@ import com.example.outsourcing_project.domain.task.controller.dto.*;
 import com.example.outsourcing_project.domain.task.domain.model.Task;
 import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
 import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
-import com.example.outsourcing_project.domain.user.domain.User;
-import com.example.outsourcing_project.domain.user.domain.UserRepository;
+import com.example.outsourcing_project.domain.user.domain.model.User;
+import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
 

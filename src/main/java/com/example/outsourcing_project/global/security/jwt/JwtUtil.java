@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.global.security.Jwt;
+package com.example.outsourcing_project.global.security.jwt;
 
 import com.example.outsourcing_project.global.enums.UserRoleEnum;
 import io.jsonwebtoken.Claims;
@@ -19,7 +19,7 @@ import java.util.UUID;
 public class JwtUtil {
 
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 30 * 60 * 1000L; // 60분
+    private static final long TOKEN_TIME = 30 * 60 * 1000L; // 30분
     private static final long REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60 * 1000L; // 7일
 
     @Value("${jwt.secret.key}")
@@ -36,7 +36,7 @@ public class JwtUtil {
     /**
      * Access 토큰 생성
      */
-    public String createAccessToken(Long userId, String userName, String email, UserRoleEnum userRole) {
+    public String createAccessToken(Long userId, UserRoleEnum userRole) {
         Date now = new Date();
         String jti = UUID.randomUUID().toString();
 
@@ -56,8 +56,7 @@ public class JwtUtil {
 
     public String createRefreshToken() {
         Date now = new Date();
-        return BEARER_PREFIX +
-                Jwts.builder()
+        return Jwts.builder()
                         .setId(java.util.UUID.randomUUID().toString())  // 고유 ID
                         .setIssuedAt(now)
                         .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_TIME))
@@ -109,27 +108,11 @@ public class JwtUtil {
         }
     }
 
-    public long getAccessTokenExpireTime() {
-        return TOKEN_TIME;
-    }
-
     public long getRefreshTokenExpireTime() {
         return REFRESH_TOKEN_TIME;
     }
 
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
-    }
-
-    public String extractRoles(String token) {
-        return extractAllClaims(token).get("auth", String.class);
-    }
-
-    public String extractEmail(String token) {
-        return extractAllClaims(token).get("email",String.class);
-    }
-
-    public String extractuserId(String token) {
+    public String extractUserId(String token) {
         return extractAllClaims(token).getSubject();
     }
  }

@@ -1,6 +1,7 @@
 package com.example.outsourcing_project.domain.task.domain.model;
 
-import com.example.outsourcing_project.domain.user.domain.User;
+import com.example.outsourcing_project.domain.user.domain.model.User;
+import com.example.outsourcing_project.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "tasks")
-public class Task {
+public class Task extends BaseEntity {
 
     // 태스크 id (PK)
     @Id
