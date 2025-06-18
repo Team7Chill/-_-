@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class CreateTaskResponseDto {
     private final Long taskId;
     private final Long managerId;
+    private final String managerName;
     private final Long creatorId;
     private final String title;
     private final String content;
@@ -25,6 +26,7 @@ public class CreateTaskResponseDto {
     public CreateTaskResponseDto(Task task) {
         this.taskId = task.getId();
         this.managerId = task.getManager().getId();
+        this.managerName = task.getManager().getUsername();
         this.creatorId = task.getCreator().getId();
         this.title = task.getTitle();
         this.content = task.getContent();
