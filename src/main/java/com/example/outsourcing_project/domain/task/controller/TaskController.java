@@ -12,12 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -28,12 +25,11 @@ public class TaskController {
 
     // 태스크 작성(POST)
     @PostMapping
-    public ResponseEntity<ApiResponse<CreateTaskResponseDto>> createTask(@Valid @RequestBody CreateTaskRequestDto createTaskRequestDto) {
+    public ResponseEntity<ApiResponse<CreateTaskResponseDto>> createTask(
+            @Valid @RequestBody CreateTaskRequestDto createTaskRequestDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails // jwt 토큰
+    ) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // CustomUserDetails로 캐스팅하여 ID 추출
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long creatorId = userDetails.getId();
 
         CreateTaskResponseDto responseDto = taskService.createTask(createTaskRequestDto, creatorId);

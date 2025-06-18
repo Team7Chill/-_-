@@ -6,13 +6,12 @@ import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
 import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
+import com.example.outsourcing_project.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +26,11 @@ public class TaskService {
 
         // 유저 조회
         User creator = userRepository.findById(creatorId)
-                .orElseThrow(() -> new IllegalArgumentException("작성자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("작성자를 찾을 수 없습니다."));
 
         // 담당자 조회
         User manager = userRepository.findById(requestDto.getManagerId())
-                .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("담당자를 찾을 수 없습니다."));
 
 
         TaskStatus taskStatus = TaskStatus.TODO; //초기 상태 설정
@@ -61,7 +60,7 @@ public class TaskService {
     @Transactional(readOnly = true)
     public TaskResponseDto getTaskById(Long taskId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 테스크가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 ID의 테스크가 존재하지 않습니다."));
         return new TaskResponseDto(task);
     }
 
@@ -70,13 +69,13 @@ public class TaskService {
     public TaskResponseDto updateTask(UpdateTaskRequestDto requestDto, Long taskId) {
         // 기존 태스크 조회
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 태스크가 존재하지 않습니다."));
 
         Long managerId = requestDto.getManagerId();
 
         // userRepository를 통해 영속 상태인 User 조회
         User manager = userRepository.findById(managerId)
-                .orElseThrow(() -> new IllegalArgumentException("담당자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("담당자를 찾을 수 없습니다."));
 
         task.setManager(manager);
 
@@ -97,7 +96,7 @@ public class TaskService {
 
         // 태스크 조회
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 태스크가 존재하지 않습니다."));
 
         task.setStatus(updateStatus);
         Task updatedTask = taskRepository.save(task);
@@ -110,7 +109,7 @@ public class TaskService {
     public void softDeleteTask(Long taskId) {
         // 태스크 조회
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 태스크가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 태스크가 존재하지 않습니다."));
 
 
         task.setDeleted(true);
