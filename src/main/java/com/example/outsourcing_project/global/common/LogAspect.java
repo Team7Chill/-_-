@@ -3,7 +3,7 @@ package com.example.outsourcing_project.global.common;
 import com.example.outsourcing_project.domain.auth.service.dto.LoginResponse;
 import com.example.outsourcing_project.domain.comments.controller.CommentCreateResponseDto;
 import com.example.outsourcing_project.domain.log.domain.model.LoggingType;
-import com.example.outsourcing_project.domain.log.service.LogSaveDto;
+import com.example.outsourcing_project.domain.log.LogSaveDto;
 import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskResponseDto;
 import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
 import com.example.outsourcing_project.global.security.jwt.JwtUtil;

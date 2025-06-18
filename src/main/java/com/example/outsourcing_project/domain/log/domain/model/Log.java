@@ -1,17 +1,15 @@
 package com.example.outsourcing_project.domain.log.domain.model;
 
 import com.example.outsourcing_project.domain.user.domain.model.User;
+import com.example.outsourcing_project.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-public class Log {
+public class Log extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,9 +33,4 @@ public class Log {
 
     @Column(nullable = false)
     private String contents;
-
-    //Base Entity 병합 이후 수정
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
 }
