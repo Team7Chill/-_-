@@ -33,13 +33,16 @@ public class LogAspect {
     //서비스 패키지 내의 클래스만 접근
     @Pointcut("execution(* com.example.outsourcing_project.domain..service..*(..)) " +
             "&& !within(com.example.outsourcing_project.domain.log..*)" +
-            "&& !within(com.example.outsourcing_project.domain.user..*)")
+            "&& !within(com.example.outsourcing_project.domain.user..*)" +
+            "&& !within(com.example.outsourcing_project.domain.auth.service.JwtBlacklistService)" +
+            "&& !within(com.example.outsourcing_project.domain.auth.service.RefreshTokenService)")
     public void loggableServiceMethods() {}
 
     @Around("loggableServiceMethods()")
     public Object saveActivityLog(ProceedingJoinPoint joinPoint) throws Throwable  {
         // 실제 비즈니스 로직 수행
         Object result = joinPoint.proceed();
+        String methodName = joinPoint.getSignature().getName();
 
         // HttpServletRequest 가져오기
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
@@ -87,7 +90,8 @@ public class LogAspect {
             return;
         }
         //로그인
-        if(result instanceof LoginResponse dto){
+        if(result != null && result.getClass().getSimpleName().equals("LoginResponse")){
+            LoginResponse dto = (LoginResponse) result;
             Long userIdFromToken = getUserIdFromToken(dto.getAccessToken());
             logSaveDto.setUserId(userIdFromToken);
             logSaveDto.setActivityId(userIdFromToken);
