@@ -1,16 +1,15 @@
 package com.example.outsourcing_project.domain.user.service;
 
 import com.example.outsourcing_project.domain.user.controller.dto.RegisterRequestDto;
-import com.example.outsourcing_project.domain.user.controller.dto.UserResponseDto;
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
 import com.example.outsourcing_project.global.enums.UserRoleEnum;
-import com.example.outsourcing_project.global.exception.BadRequestException;
 import com.example.outsourcing_project.global.exception.ConflictException;
+import com.example.outsourcing_project.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
@@ -45,5 +44,12 @@ public class UserService {
         // 저장
         userRepository.save(user);
 
+    }
+
+    @Transactional
+    public void delete(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("요청에 해당하는 사용자 정보를 찾을 수 없습니다."));
+        user.delete();
     }
 }
