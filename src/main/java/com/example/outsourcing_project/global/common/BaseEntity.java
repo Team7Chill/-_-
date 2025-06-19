@@ -47,7 +47,6 @@ public class BaseEntity {
 
     /**
     삭제일자 사용(처리) 예시입니다.
-    task.setDeleted(true);
-    taskRepository.save(task);
+    task.delete();
     **/
 }

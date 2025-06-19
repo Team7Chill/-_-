@@ -16,23 +16,15 @@ import java.time.LocalDateTime;
 @Builder
 public class CommentCreateResponseDto {
     private Long id;
-    private User userId;
-    private Task taskId;
+    private Long userId;
+    private Long taskId;
     private String content;
     private String author;
     private LocalDateTime createdAt;
 
     public CommentCreateResponseDto(Comments comment) {
-
-    }
-
-    public static CommentCreateResponseDto from(Comments comment) {
-        return CommentCreateResponseDto.builder()
-                .id(comment.getId())
-                .userId(comment.getUser())
-                .taskId(comment.getTask())
-                .content(comment.getContent())
-                .createdAt(comment.getCreatedAt())
-                .build();
+        this.content = comment.getContent();
+        this.taskId = comment.getTask().getId();
+        this.userId = comment.getUser().getId();
     }
 }
