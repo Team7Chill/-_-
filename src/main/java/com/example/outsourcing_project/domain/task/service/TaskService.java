@@ -126,8 +126,6 @@ public class TaskService {
         }
 
         task.delete();
-
-        taskRepository.save(task);
     }
 
 }
