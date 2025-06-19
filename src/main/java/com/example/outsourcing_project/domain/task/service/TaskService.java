@@ -7,6 +7,7 @@ import com.example.outsourcing_project.domain.task.domain.repository.TaskReposit
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
 import com.example.outsourcing_project.global.exception.NotFoundException;
+import com.example.outsourcing_project.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,14 +67,19 @@ public class TaskService {
 
     // 태스크 수정
     @Transactional
-    public TaskResponseDto updateTask(UpdateTaskRequestDto requestDto, Long taskId) {
+    public TaskResponseDto updateTask(UpdateTaskRequestDto requestDto, Long taskId, Long userId) {
+
         // 기존 태스크 조회
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new NotFoundException("해당 태스크가 존재하지 않습니다."));
 
         Long managerId = requestDto.getManagerId();
 
-        // userRepository를 통해 영속 상태인 User 조회
+        if (!task.getCreator().getId().equals(userId) && !managerId.equals(userId)) {
+            throw new UnauthorizedException("해당 작업을 수행할 권한이 없습니다");
+        }
+
+        // userRepository를 통해 User 조회
         User manager = userRepository.findById(managerId)
                 .orElseThrow(() -> new NotFoundException("담당자를 찾을 수 없습니다."));
 
@@ -92,11 +98,15 @@ public class TaskService {
 
     // 태스크 상태 수정
     @Transactional
-    public UpdateTaskStatusResponseDto updateTaskStatus(Long taskId, TaskStatus updateStatus) {
+    public UpdateTaskStatusResponseDto updateTaskStatus(Long taskId, TaskStatus updateStatus, Long userId) {
 
         // 태스크 조회
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new NotFoundException("해당 태스크가 존재하지 않습니다."));
+
+        if (!task.getCreator().getId().equals(userId) && !task.getManager().getId().equals(userId)) {
+            throw new UnauthorizedException("해당 작업을 수행할 권한이 없습니다");
+        }
 
         task.setStatus(updateStatus);
         Task updatedTask = taskRepository.save(task);
@@ -106,11 +116,14 @@ public class TaskService {
 
     // 태스크 삭제(soft delete)
     @Transactional
-    public void softDeleteTask(Long taskId) {
+    public void softDeleteTask(Long taskId, Long userId) {
         // 태스크 조회
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new NotFoundException("해당 태스크가 존재하지 않습니다."));
 
+        if (!task.getCreator().getId().equals(userId) && !task.getManager().getId().equals(userId)) {
+            throw new UnauthorizedException("해당 작업을 수행할 권한이 없습니다");
+        }
 
         task.setDeleted(true);
 
