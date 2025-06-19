@@ -90,10 +90,12 @@ public class TaskController {
     @PatchMapping("/{taskId}")
     public ResponseEntity<ApiResponse<TaskResponseDto>> updateTask(
             @PathVariable Long taskId,
-            @RequestBody UpdateTaskRequestDto updateTaskRequestDto
+            @RequestBody UpdateTaskRequestDto updateTaskRequestDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        Long userId = userDetails.getId();
 
-        TaskResponseDto updatedTask = taskService.updateTask(updateTaskRequestDto, taskId);
+        TaskResponseDto updatedTask = taskService.updateTask(updateTaskRequestDto, taskId, userId);
 
         return new ResponseEntity<>(
                 ApiResponse.success(
@@ -106,9 +108,12 @@ public class TaskController {
     @PatchMapping("/{taskId}/status")
     public ResponseEntity<ApiResponse<UpdateTaskStatusResponseDto>> updateTaskStatus(
             @PathVariable Long taskId,
-            @RequestBody UpdateTaskStatusRequestDto requestDto
+            @RequestBody UpdateTaskStatusRequestDto requestDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        UpdateTaskStatusResponseDto responseDto = taskService.updateTaskStatus(taskId, requestDto.getStatus());
+        Long userId = userDetails.getId();
+
+        UpdateTaskStatusResponseDto responseDto = taskService.updateTaskStatus(taskId, requestDto.getStatus(), userId);
 
         return new ResponseEntity<>(
                 ApiResponse.success(
@@ -120,8 +125,13 @@ public class TaskController {
 
     // 태스크 삭제(DELETE)
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
-        taskService.softDeleteTask(taskId);
+    public ResponseEntity<?> deleteTask(
+            @PathVariable Long taskId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Long userId = userDetails.getId();
+
+        taskService.softDeleteTask(taskId, userId);
 
         return new ResponseEntity<>(
                 ApiResponse.success(

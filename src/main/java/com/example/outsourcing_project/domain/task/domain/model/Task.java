@@ -71,4 +71,20 @@ public class Task extends BaseEntity {
         this.startDate = startDate;
         this.deadLine = deadLine;
     }
+
+    // 전체 정보 업데이트 메서드
+    public void update(User manager, String title, String content, TaskPriority priority, LocalDateTime startDate, LocalDateTime deadLine) {
+        this.manager = manager;
+        this.title = title;
+        this.content = content;
+        this.priority = priority;
+        this.startDate = startDate;
+        this.deadLine = deadLine;
+    }
+
+    // 상태 업데이트
+    public void updateStatus(TaskStatus status) {
+        this.status = status;
+    }
+
 }
