@@ -19,6 +19,8 @@ public class TaskResponseDto {
     private final TaskPriority priority;
     private final LocalDateTime startDate;
     private final LocalDateTime deadLine;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     public TaskResponseDto(Task task) {
         this.taskId = task.getId();
@@ -30,7 +32,7 @@ public class TaskResponseDto {
         this.priority = task.getPriority();
         this.startDate = task.getStartDate();
         this.deadLine = task.getDeadLine();
+        this.createdAt = task.getCreatedAt();
+        this.updatedAt = task.getUpdatedAt();
     }
-
-    // 추후 생성일 수정일 추가
 }

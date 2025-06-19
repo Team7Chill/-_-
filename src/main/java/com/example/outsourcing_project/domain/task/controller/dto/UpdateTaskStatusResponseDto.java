@@ -11,11 +11,9 @@ public class UpdateTaskStatusResponseDto {
 
     private final Long taskId;
     private final TaskStatus status;
-    //    private final LocalDateTime updatedAt;
 
     public UpdateTaskStatusResponseDto(Long taskId, TaskStatus status) {
         this.taskId = taskId;
         this.status = status;
     }
-
 }

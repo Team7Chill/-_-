@@ -83,17 +83,15 @@ public class TaskService {
         User manager = userRepository.findById(managerId)
                 .orElseThrow(() -> new NotFoundException("담당자를 찾을 수 없습니다."));
 
-        task.setManager(manager);
+        // task 업데이트
+        task.update(manager,
+                requestDto.getTitle(),
+                requestDto.getContent(),
+                requestDto.getPriority(),
+                requestDto.getStartDate(),
+                requestDto.getDeadLine());
 
-        // 필드 업데이트
-        task.setManager(manager);
-        task.setTitle(requestDto.getTitle());
-        task.setContent(requestDto.getContent());
-        task.setPriority(requestDto.getPriority());
-        task.setStartDate(requestDto.getStartDate());
-        task.setDeadLine(requestDto.getDeadLine());
-
-        return new TaskResponseDto(taskRepository.save(task));
+        return new TaskResponseDto(task);
     }
 
     // 태스크 상태 수정
@@ -108,10 +106,9 @@ public class TaskService {
             throw new UnauthorizedException("해당 작업을 수행할 권한이 없습니다");
         }
 
-        task.setStatus(updateStatus);
-        Task updatedTask = taskRepository.save(task);
+        task.updateStatus(updateStatus);
 
-        return new UpdateTaskStatusResponseDto(updatedTask.getId(), updatedTask.getStatus());
+        return new UpdateTaskStatusResponseDto(task.getId(), task.getStatus());
     }
 
     // 태스크 삭제(soft delete)
