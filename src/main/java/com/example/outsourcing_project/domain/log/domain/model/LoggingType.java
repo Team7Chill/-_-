@@ -19,7 +19,7 @@ public enum LoggingType {
     LOGIN("/api/login", "POST", "LOGIN", "로그인 되었습니다.",-1),
     LOGOUT("/api/logout", "POST", "LOGOUT", "로그아웃 되었습니다.",-1);
 
-    private final String uriPattern;
+    private final String uri;
     private final String method;
     private final String type;
     private final String contents;

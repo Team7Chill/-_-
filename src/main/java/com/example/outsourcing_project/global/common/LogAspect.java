@@ -38,25 +38,16 @@ public class LogAspect {
 
     @Around("loggableServiceMethods()")
     public Object saveActivityLog(ProceedingJoinPoint joinPoint) throws Throwable  {
-
-        // HttpServletRequest 가져오기
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-
-        //비즈니스 로직 수행 시 전달되는 파라미터
-        Object[] args = joinPoint.getArgs();
-
         // 실제 비즈니스 로직 수행
         Object result = joinPoint.proceed();
 
+        // HttpServletRequest 가져오기
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         String method = request.getMethod();
         if("GET".equals(method)) return result;
 
-        LogSaveDto logSaveDto = new LogSaveDto();
-        Long userId = getUserId();
-        String uri = request.getRequestURI();
-
         //LogSaveDto 에 DB 저장 내용 Set
-        setLoggingTypeToDto(logSaveDto, args, result, method, uri, userId);
+        LogSaveDto logSaveDto = setLogSaveDto(request, result, method);
 
         // 로그 DB 저장 이벤트 발생
         publisher.publishEvent(logSaveDto);
@@ -65,26 +56,31 @@ public class LogAspect {
     }
 
     //LogSaveDto 에 DB 저장 내용 Set
-    private void setLoggingTypeToDto(LogSaveDto logSaveDto,Object[] args,Object result, String method, String uri, Long userId){
-        logSaveDto.setUserId(getUserId());
+    private LogSaveDto setLogSaveDto(HttpServletRequest request, Object result, String method){
+        LogSaveDto logSaveDto = new LogSaveDto();
+        Long userId = getUserId();
+        String uri = request.getRequestURI();
+
+        logSaveDto.setUserId(userId);
         logSaveDto.setUri(uri);
         logSaveDto.setMethod(method);
 
         // 활동 ID 및 활동 유형 설정
         for (LoggingType loggingType : LoggingType.values()) {
-            if (loggingType.getMethod().equals(method) && uri.matches(loggingType.getUriPattern())) {
+            if (loggingType.getMethod().equals(method) && uri.matches(loggingType.getUri())) {
                 logSaveDto.setActivityType(loggingType.getType());
                 logSaveDto.setContents(loggingType.getContents());
                 logSaveDto.setUri(uri);
                 logSaveDto.setMethod(method);
-                setActivityIdByMethod(logSaveDto, loggingType, method, uri, result, args);
-                return;
+                setActivityIdByMethod(logSaveDto, loggingType, method, uri, result, userId);
+                return logSaveDto;
             }
         }
+        return logSaveDto;
     }
 
     //ActivityId는 taks, comment, user 구분하여 Set
-    private void setActivityIdByMethod(LogSaveDto logSaveDto, LoggingType loggingType, String method, String uri, Object result, Object[] args){
+    private void setActivityIdByMethod(LogSaveDto logSaveDto, LoggingType loggingType, String method, String uri, Object result, Long userId){
         //변경 및 삭제 로그
         if(!"POST".equals(method)){
             logSaveDto.setActivityId(extractIdFromUri(uri, loggingType.getIdIndex()));
@@ -92,14 +88,14 @@ public class LogAspect {
         }
         //로그인
         if(result instanceof LoginResponse dto){
-            Long userId = getUserIdFromToken(dto.getAccessToken());
-            logSaveDto.setUserId(userId);
-            logSaveDto.setActivityId(userId);
+            Long userIdFromToken = getUserIdFromToken(dto.getAccessToken());
+            logSaveDto.setUserId(userIdFromToken);
+            logSaveDto.setActivityId(userIdFromToken);
             return;
         }
         //로그아웃
         if(uri.matches("/api/logout")){
-            logSaveDto.setActivityId(getUserId());
+            logSaveDto.setActivityId(userId);
             return;
         }
         //댓글 생성
