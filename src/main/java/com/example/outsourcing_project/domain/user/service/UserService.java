@@ -37,8 +37,10 @@ public class UserService {
         User user = User.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())
+                .name(dto.getName())
                 .password(encodedPassword)
                 .role(UserRoleEnum.USER)
+                .tokenVersion(1)
                 .build();
 
         // 저장

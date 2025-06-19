@@ -25,7 +25,7 @@ public class UserController {
         userService.register(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(null, "화원가입이 완료되었습니다."));
+                .body(ApiResponse.success(null, "회원가입이 완료되었습니다."));
     }
 
     @GetMapping("/me")
