@@ -125,7 +125,7 @@ public class TaskController {
 
     // 태스크 삭제(DELETE)
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<?> deleteTask(
+    public ResponseEntity<ApiResponse<Void>> deleteTask(
             @PathVariable Long taskId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
@@ -138,6 +138,6 @@ public class TaskController {
                         null,
                         "태스크가 삭제되었습니다."
                 ),
-                HttpStatus.NO_CONTENT);
+                HttpStatus.OK);
     }
 }
