@@ -125,7 +125,7 @@ public class TaskService {
             throw new UnauthorizedException("해당 작업을 수행할 권한이 없습니다");
         }
 
-        task.setDeleted(true);
+        task.delete();
 
         taskRepository.save(task);
     }
