@@ -1,6 +1,7 @@
 package com.example.outsourcing_project.domain.comments.service;
 
 import com.example.outsourcing_project.domain.comments.controller.CommentCreateResponseDto;
+import com.example.outsourcing_project.domain.comments.controller.CommentGetResponseDto;
 import com.example.outsourcing_project.domain.comments.controller.CommentUpdateResponseDto;
 import com.example.outsourcing_project.domain.comments.model.entity.Comments;
 import com.example.outsourcing_project.domain.comments.model.repository.CommentRepository;
@@ -30,7 +31,6 @@ public class CommentService {
     public CommentCreateResponseDto createComment(Long taskId, Long userId, String content) {
 
         Task task = getTaskOrThrow(taskId);
-
         User user = getUserOrThrow(userId);
 
         Comments savedComments = commentRepository.save(new Comments(content, task, user));
@@ -39,9 +39,9 @@ public class CommentService {
     }
 
 
-    public Page<CommentCreateResponseDto> getAllComments(Long taskId, Pageable pageable) {
+    public Page<CommentGetResponseDto> getAllComments(Long taskId, Pageable pageable) {
         Page<Comments> commentPage = commentRepository.findByTaskId(taskId, pageable);
-        return commentPage.map(CommentCreateResponseDto::from);
+        return commentPage.map(CommentGetResponseDto::from);
     }
 
     public CommentCreateResponseDto getCommentByTask(Long taskId, Long commentId) {

@@ -38,11 +38,11 @@ public class CommentsController {
 
 
     @GetMapping("/tasks/{taskId}/comments")
-    public ResponseEntity<ApiResponse<Page<CommentCreateResponseDto>>> getAllComments(
+    public ResponseEntity<ApiResponse<Page<CommentGetResponseDto>>> getAllComments(
             @PathVariable Long taskId,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<CommentCreateResponseDto> commentPage = commentService.getAllComments(taskId, pageable);
+        Page<CommentGetResponseDto> commentPage = commentService.getAllComments(taskId, pageable);
         String message = String.format("%d 태스크의 댓글 전체 조회", taskId);
         return ResponseEntity.ok(ApiResponse.success(commentPage, message));
     }
