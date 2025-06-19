@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.domain.log;
+package com.example.outsourcing_project.domain.log.service;
 
 import com.example.outsourcing_project.domain.log.domain.model.Log;
 import com.example.outsourcing_project.domain.user.domain.model.User;

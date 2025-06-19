@@ -1,4 +1,4 @@
-package com.example.outsourcing_project.domain.log;
+package com.example.outsourcing_project.domain.log.service;
 
 import com.example.outsourcing_project.domain.log.controller.LogRequestDto;
 import com.example.outsourcing_project.domain.log.controller.LogResponseDto;

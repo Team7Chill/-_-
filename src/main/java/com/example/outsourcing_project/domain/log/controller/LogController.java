@@ -1,6 +1,6 @@
 package com.example.outsourcing_project.domain.log.controller;
 
-import com.example.outsourcing_project.domain.log.LogService;
+import com.example.outsourcing_project.domain.log.service.LogService;
 import com.example.outsourcing_project.global.common.ApiResponse;
 import com.example.outsourcing_project.global.common.PageResponse;
 import lombok.AllArgsConstructor;

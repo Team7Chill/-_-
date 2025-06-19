@@ -3,7 +3,7 @@ package com.example.outsourcing_project.global.common;
 import com.example.outsourcing_project.domain.auth.service.dto.LoginResponse;
 import com.example.outsourcing_project.domain.comments.controller.CommentCreateResponseDto;
 import com.example.outsourcing_project.domain.log.domain.model.LoggingType;
-import com.example.outsourcing_project.domain.log.LogSaveDto;
+import com.example.outsourcing_project.domain.log.service.LogSaveDto;
 import com.example.outsourcing_project.domain.task.controller.dto.CreateTaskResponseDto;
 import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
 import com.example.outsourcing_project.global.security.jwt.JwtUtil;
@@ -88,9 +88,9 @@ public class LogAspect {
         }
         //로그인
         if(result instanceof LoginResponse dto){
-            userId = getUserIdFromToken(dto.getAccessToken());
-            logSaveDto.setUserId(userId);
-            logSaveDto.setActivityId(userId);
+            Long userIdFromToken = getUserIdFromToken(dto.getAccessToken());
+            logSaveDto.setUserId(userIdFromToken);
+            logSaveDto.setActivityId(userIdFromToken);
             return;
         }
         //로그아웃
