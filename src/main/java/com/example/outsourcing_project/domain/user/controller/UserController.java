@@ -46,4 +46,12 @@ public class UserController {
 
         return ResponseEntity.ok(ApiResponse.success(responseDto, "회원 정보 조회 성공"));
     }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<ApiResponse<Void>> withdraw(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        userService.delete(userDetails.getId());
+        return ResponseEntity.noContent().build();
+    }
 }
