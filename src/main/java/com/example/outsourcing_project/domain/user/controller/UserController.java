@@ -6,6 +6,8 @@ import com.example.outsourcing_project.domain.user.service.UserService;
 import com.example.outsourcing_project.global.common.ApiResponse;
 import com.example.outsourcing_project.global.enums.UserRoleEnum;
 import com.example.outsourcing_project.global.security.jwt.CustomUserDetails;
+import com.example.outsourcing_project.global.security.jwt.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody RegisterRequestDto requestDto) {
@@ -49,9 +52,12 @@ public class UserController {
 
     @PostMapping("/withdraw")
     public ResponseEntity<ApiResponse<Void>> withdraw(
+            @RequestHeader(value = "Authorization", required = false) String bearerToken,
+            @CookieValue(value = "refreshToken", required = false) String refreshToken,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        userService.delete(userDetails.getId());
+        String accessToken = jwtUtil.substringToken(bearerToken);
+        userService.delete(accessToken, refreshToken,userDetails.getId());
         return ResponseEntity.noContent().build();
     }
 }

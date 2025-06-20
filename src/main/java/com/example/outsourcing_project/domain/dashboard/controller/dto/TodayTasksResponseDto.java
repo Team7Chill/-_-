@@ -18,4 +18,6 @@ public class TodayTasksResponseDto {
     private TaskPriority priority; // 태스크 우선순위
     private TaskStatus status; // 태스크 상태
     private LocalDateTime deadline; // 마감 기한
+
+
 }
