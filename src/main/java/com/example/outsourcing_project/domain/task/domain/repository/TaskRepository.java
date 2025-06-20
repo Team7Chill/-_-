@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     //전체 태스크 수
-    @Query("select COUNT(t) from Task t where t.isDeleted = false and t.creator = :userId")
+    @Query("select COUNT(t) from Task t where t.isDeleted = false and t.creator.id = :userId")
     long countAll(@Param("userId") Long userId);
 
     // 태스크 전체조회 페이징 조회
@@ -35,7 +35,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     );
 
     // 상태별 태스크 수
-    @Query("select COUNT(t) from Task t where t.status = :status and t.isDeleted = false and t.creator = :userId")
+    @Query("select COUNT(t) from Task t where t.status = :status and t.isDeleted = false and t.creator.id = :userId")
     long countByStatus(@Param("status") TaskStatus status, @Param("userId") Long userId);
 
     // 마감 기한 초과 태스크 수
@@ -43,7 +43,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "where t.status in ('TODO', 'IN_PROGRESS') " +
             "and t.deadLine < current_timestamp " +
             "and t.isDeleted = false " +
-            "and t.creator = :userId")
+            "and t.creator.id = :userId")
     long countOverdueTasks(@Param("userId") Long userId);
 
     // 오늘의 태스크(우선순위 정렬)
