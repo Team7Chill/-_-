@@ -4,6 +4,7 @@ import com.example.outsourcing_project.domain.auth.controller.dto.LoginRequest;
 import com.example.outsourcing_project.domain.auth.service.dto.LoginResponse;
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
+import com.example.outsourcing_project.global.common.Loggable;
 import com.example.outsourcing_project.global.exception.UnauthorizedException;
 import com.example.outsourcing_project.global.security.jwt.JwtUtil;
 import com.example.outsourcing_project.global.security.cookie.CookieUtil;
@@ -27,6 +28,7 @@ public class AuthService {
     private final RefreshTokenService refreshTokenService;
     private final JwtBlacklistService jwtBlacklistService;
 
+    @Loggable
     @Transactional
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
@@ -47,6 +49,7 @@ public class AuthService {
     }
 
 
+    @Loggable
     @Transactional
     public void logout(String bearerToken, String refreshToken, HttpServletResponse response) {
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {

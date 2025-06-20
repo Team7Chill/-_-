@@ -31,15 +31,21 @@ public class LogAspect {
     private final JwtUtil jwtUtil;
 
     //서비스 패키지 내의 클래스만 접근
-    @Pointcut("execution(* com.example.outsourcing_project.domain..service..*(..)) " +
-            "&& !within(com.example.outsourcing_project.domain.log..*)" +
-            "&& !within(com.example.outsourcing_project.domain.user..*)")
-    public void loggableServiceMethods() {}
+//    @Pointcut("execution(* com.example.outsourcing_project.domain..service..*(..)) " +
+//            "&& !within(com.example.outsourcing_project.domain.log..*)" +
+//            "&& !within(com.example.outsourcing_project.domain.user..*)" +
+//    public void loggableServiceMethods() {}
 
-    @Around("loggableServiceMethods()")
+    // AOP 접근 메서드에 커스텀 어노테이션 사용
+    @Pointcut("@annotation(com.example.outsourcing_project.global.common.Loggable)")
+    public void loggableMethods() {
+    }
+
+    @Around("loggableMethods()")
     public Object saveActivityLog(ProceedingJoinPoint joinPoint) throws Throwable  {
         // 실제 비즈니스 로직 수행
         Object result = joinPoint.proceed();
+        String methodName = joinPoint.getSignature().getName();
 
         // HttpServletRequest 가져오기
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
@@ -79,7 +85,7 @@ public class LogAspect {
         return logSaveDto;
     }
 
-    //ActivityId는 taks, comment, user 구분하여 Set
+    //ActivityId는 tasks, comment, user 구분하여 Set
     private void setActivityIdByMethod(LogSaveDto logSaveDto, LoggingType loggingType, String method, String uri, Object result, Long userId){
         //변경 및 삭제 로그
         if(!"POST".equals(method)){
@@ -87,7 +93,8 @@ public class LogAspect {
             return;
         }
         //로그인
-        if(result instanceof LoginResponse dto){
+        if(result != null && result.getClass().getSimpleName().equals("LoginResponse")){
+            LoginResponse dto = (LoginResponse) result;
             Long userIdFromToken = getUserIdFromToken(dto.getAccessToken());
             logSaveDto.setUserId(userIdFromToken);
             logSaveDto.setActivityId(userIdFromToken);

@@ -9,6 +9,7 @@ import com.example.outsourcing_project.domain.task.domain.model.Task;
 import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
+import com.example.outsourcing_project.global.common.Loggable;
 import com.example.outsourcing_project.global.exception.NotFoundException;
 import com.example.outsourcing_project.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +26,7 @@ public class CommentService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
+    @Loggable
     @Transactional
     public CommentCreateResponseDto createComment(Long taskId, Long userId, String content) {
 
@@ -52,6 +52,7 @@ public class CommentService {
     }
 
 
+    @Loggable
     @Transactional
     public CommentUpdateResponseDto updateComments(Long taskId, Long userId, Long commentId, String comments) {
         getTaskOrThrow(taskId);
@@ -67,7 +68,7 @@ public class CommentService {
         return new CommentUpdateResponseDto(comment);
     }
 
-
+    @Loggable
     @Transactional
     public void deleteComments(Long taskId, Long userId, Long commentId) {
         getTaskOrThrow(taskId);
