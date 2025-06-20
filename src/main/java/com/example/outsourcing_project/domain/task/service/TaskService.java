@@ -6,6 +6,7 @@ import com.example.outsourcing_project.domain.task.domain.model.TaskStatus;
 import com.example.outsourcing_project.domain.task.domain.repository.TaskRepository;
 import com.example.outsourcing_project.domain.user.domain.model.User;
 import com.example.outsourcing_project.domain.user.domain.repository.UserRepository;
+import com.example.outsourcing_project.global.common.Loggable;
 import com.example.outsourcing_project.global.exception.NotFoundException;
 import com.example.outsourcing_project.global.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class TaskService {
     private final UserRepository userRepository;
 
     // 태스크 생성/저장
+    @Loggable
     @Transactional
     public CreateTaskResponseDto createTask(CreateTaskRequestDto requestDto, Long creatorId) {
 
@@ -66,6 +68,7 @@ public class TaskService {
     }
 
     // 태스크 수정
+    @Loggable
     @Transactional
     public TaskResponseDto updateTask(UpdateTaskRequestDto requestDto, Long taskId, Long userId) {
 
@@ -95,6 +98,7 @@ public class TaskService {
     }
 
     // 태스크 상태 수정
+    @Loggable
     @Transactional
     public UpdateTaskStatusResponseDto updateTaskStatus(Long taskId, TaskStatus updateStatus, Long userId) {
 
@@ -112,6 +116,7 @@ public class TaskService {
     }
 
     // 태스크 삭제(soft delete)
+    @Loggable
     @Transactional
     public void softDeleteTask(Long taskId, Long userId) {
         // 태스크 조회
