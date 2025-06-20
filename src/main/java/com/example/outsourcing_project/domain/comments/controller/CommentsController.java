@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -67,7 +65,7 @@ public class CommentsController {
 
         Long userId = userDetails.getId();
 
-        CommentUpdateResponseDto updateCommentsResponse = commentService.updateComments(taskId, userId, commentId, request.getComments());
+        CommentUpdateResponseDto updateCommentsResponse = commentService.updateComments(taskId, userId, commentId, request.getContent());
         String message = String.format("%d 태스크의 댓글 수정", taskId);
         return ResponseEntity.ok(ApiResponse.success(updateCommentsResponse, message));
     }
